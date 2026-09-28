@@ -1,7 +1,7 @@
 {
-  "name": "BENRU 10",
-  "short_name": "BENRU 10",
-  "description": "Application officielle de l'artiste BENRU 10 — sorties, concerts, actualités.",
+  "name": "BENRU 10 Admin",
+  "short_name": "BENRU Admin",
+  "description": "Espace de gestion réservé à l'équipe de BENRU 10.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

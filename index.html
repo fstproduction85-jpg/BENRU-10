@@ -7,50 +7,28 @@
 <meta name="theme-color" content="#e8a33d">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<title>ARTISTE — Application officielle</title>
+<title>ADMIN — Artiste</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   TOKENS — modifie ces couleurs pour coller à l'identité de l'artiste
-   ============================================================ */
 :root{
-  --bg:#0b0b0d;
-  --bg-alt:#161614;
-  --bg-card:#1c1a17;
-  --border:#332c1f;
-  --text:#f5efe0;
+  --bg:#0c0b0a;
+  --bg-alt:#171410;
+  --bg-card:#1f1a13;
+  --border:#332b1c;
+  --text:#f3efe7;
   --text-dim:#a89a7c;
-  --accent:#e8a33d;      /* or — couleur principale, identique au logo MALA */
-  --accent-2:#d9713c;    /* cuivre chaud — points / cadeaux / soutien */
-  --seg-1:#e8a33d;
-  --seg-2:#d9713c;
-  --seg-3:#c9922f;
-  --seg-4:#a97c3f;
-  --seg-5:#f2c14e;
-  --seg-6:#b5651d;
-  --seg-7:#8a6d3a;
+  --accent:#e8a33d;
+  --accent-2:#d9713c;
   --radius:14px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-
 *{box-sizing:border-box; margin:0; padding:0;}
-html,body{
-  -webkit-user-select:none; user-select:none;
-  -webkit-touch-callout:none;
-}
-#promoCodeDisplay{
-  -webkit-user-select:text; user-select:text;
-  -webkit-touch-callout:default;
-}
 html,body{height:100%;}
 body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom: calc(74px + var(--safe-bottom));
-  overflow-x:hidden;
+  background:var(--bg); color:var(--text); font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased; min-height:100%;
+  padding:24px 20px calc(30px + var(--safe-bottom));
   position:relative;
 }
 body::before{
@@ -60,734 +38,264 @@ body::before{
   background-repeat:no-repeat; background-position:center 18%; background-size:70% auto;
   opacity:.14; filter:grayscale(.15);
 }
-#appRoot, .modal-overlay{position:relative; z-index:1;}
-
-/* ---------- Écran d'ouverture (5 secondes) ---------- */
-#splash{
-  position:fixed; inset:0; z-index:100;
-  background:radial-gradient(circle at 50% 30%, #241b0f, var(--bg) 65%);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  transition:opacity .6s ease, visibility .6s ease;
-  overflow:hidden;
-}
-#splash.hide{opacity:0; visibility:hidden; pointer-events:none;}
-#splash::before, #splash::after{
-  content:""; position:absolute; border-radius:50%; filter:blur(50px); opacity:.35;
-  animation:splashBlob 6s ease-in-out infinite;
-}
-#splash::before{width:220px; height:220px; background:var(--accent); top:-60px; left:-60px;}
-#splash::after{width:260px; height:260px; background:var(--accent-2); bottom:-80px; right:-60px; animation-delay:1.2s;}
-@keyframes splashBlob{0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(18px,-14px) scale(1.15);}}
-
-#splash .splash-mark{
-  position:relative; width:88px; height:88px; margin-bottom:22px;
-  opacity:0; animation:markIn .6s ease forwards;
-}
-#splash .splash-mark .ring{
-  position:absolute; inset:0; border-radius:50%;
-  background:conic-gradient(var(--accent), var(--accent-2), var(--accent));
-  animation:spinMark 2.4s linear infinite;
-}
-#splash .splash-mark .ring::after{
-  content:""; position:absolute; inset:0; border-radius:50%;
-  box-shadow:0 0 26px 4px rgba(232,163,61,.45);
-}
-#splash .splash-mark span{
-  position:absolute; inset:6px; border-radius:50%; background:var(--bg);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Bebas Neue'; font-size:20px; color:var(--accent); letter-spacing:.03em; z-index:2;
-}
-@keyframes spinMark{to{transform:rotate(360deg);}}
-@keyframes markIn{
-  from{opacity:0; transform:scale(.6);}
-  to{opacity:1; transform:scale(1);}
-}
-
-#splash h1{
-  position:relative;
-  display:inline-block;
-  font-size:42px; letter-spacing:.05em;
-  background:linear-gradient(180deg, #fff6d8 0%, #ffd369 28%, #e8a33d 52%, #b9860a 74%, #6b4d0c 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  -webkit-text-stroke:.5px rgba(0,0,0,.25);
-  clip-path: inset(0 100% 0 0);
-  animation: burnReveal 1.3s ease-out forwards; animation-delay:.4s;
-}
-#splash h1::after{
-  content:""; position:absolute; top:-16px; bottom:-16px; width:34px; left:0%;
-  background:radial-gradient(circle, rgba(255,190,70,.95), rgba(255,90,20,.55) 55%, transparent 75%);
-  filter:blur(7px);
-  animation: flameMove 1.3s ease-out forwards; animation-delay:.4s;
-}
-@keyframes burnReveal{
-  0%{clip-path:inset(0 100% 0 0); filter:drop-shadow(0 0 0 rgba(255,140,20,0));}
-  55%{filter:drop-shadow(0 0 20px rgba(255,140,20,.9));}
-  100%{clip-path:inset(0 0% 0 0); filter:drop-shadow(0 0 6px rgba(255,150,40,.4));}
-}
-@keyframes flameMove{
-  0%{left:-6%; opacity:1;}
-  92%{opacity:1;}
-  100%{left:102%; opacity:0;}
-}
-
-#splash .splash-credit{
-  margin-top:10px; font-family:'Bebas Neue'; letter-spacing:.12em; font-size:12.5px;
-  opacity:0; animation:creditIn .5s ease forwards; animation-delay:1.85s;
-}
-#splash .splash-credit span{
-  background:linear-gradient(90deg, #b9860a, #ffe98a, #ffd400, #ffe98a, #b9860a);
-  background-size:250% auto;
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:shimmerCredit 3s linear infinite;
-}
-@keyframes shimmerCredit{
-  0%{background-position:0% center;}
-  100%{background-position:250% center;}
-}
-@keyframes creditIn{
-  from{opacity:0; transform:translateY(8px);}
-  to{opacity:1; transform:translateY(0);}
-}
-
-#splash .splash-bar{
-  width:140px; height:4px; border-radius:99px; background:var(--bg-alt);
-  overflow:hidden; margin-top:26px; border:1px solid var(--border);
-  opacity:0; animation:creditIn .5s ease forwards; animation-delay:2.1s;
-}
-#splash .splash-bar i{
-  display:block; height:100%; width:0%;
-  background:linear-gradient(90deg, var(--accent), var(--accent-2));
-  animation:splashLoad 2.8s linear forwards; animation-delay:2.1s;
-}
-@keyframes splashLoad{to{width:100%;}}
-
-#appRoot{transition:opacity .5s ease;}
-#appRoot.app-hidden{opacity:0; pointer-events:none;}
-h1,h2,h3,.display{
-  font-family:'Bebas Neue',sans-serif;
-  letter-spacing:0.02em;
-  line-height:1;
-}
-a{color:inherit; text-decoration:none;}
+#loginView, #dashView{position:relative; z-index:1;}
+h1,h2,.display{font-family:'Bebas Neue',sans-serif; letter-spacing:.02em; line-height:1;}
 button{font-family:inherit; cursor:pointer; border:none;}
-img{max-width:100%; display:block;}
 
-/* ---------- Header ---------- */
-.topbar{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:18px 20px 10px;
-}
-.topbar .brand{
-  font-size:22px;
-  display:flex; align-items:center; gap:8px;
-}
-.topbar .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
-.icon-btn{
-  width:38px;height:38px;border-radius:50%;
-  background:var(--bg-alt); border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--text); position:relative;
-}
-.notif-badge{
-  position:absolute; top:-2px; right:-2px; width:10px; height:10px; border-radius:50%;
-  background:var(--accent-2); border:2px solid var(--bg);
-}
-.notif-modal{max-width:340px; max-height:78vh; display:flex; flex-direction:column; text-align:left;}
-.notif-modal h3{text-align:center; margin-bottom:14px;}
-.notif-list{overflow-y:auto; margin-bottom:14px;}
-.notif-modal button{align-self:center;}
+.topline{display:flex; align-items:center; gap:8px; margin-bottom:26px;}
+.topline .dot{width:8px; height:8px; border-radius:50%; background:var(--accent);}
+.topline span{font-size:13px; color:var(--text-dim); font-weight:600; letter-spacing:.04em;}
 
-/* ---------- Sections / pages ---------- */
-.page{display:none; padding:6px 20px 30px; animation:fadein .25s ease;}
-.page.active{display:block;}
-@keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
-
-.section-title{
-  font-size:15px; font-weight:600; color:var(--text-dim);
-  text-transform:none; margin:22px 0 12px;
-}
-
-/* ---------- Hero (Accueil) ---------- */
-.hero{
-  border-radius:20px;
-  background:linear-gradient(160deg, var(--bg-card), var(--bg-alt));
-  border:1px solid var(--border);
-  padding:26px 22px;
-  position:relative;
+/* ---------- Écran de connexion animé (lampe → robot → formulaire) ---------- */
+.login-container{
+  text-align:center; padding:34px 28px 40px; background:#0d1117; border-radius:15px;
+  max-width:340px; margin:20px auto 0; color:#fff;
+  box-shadow:0 10px 40px rgba(0,0,0,.5); animation:fadeIn 1s ease;
   overflow:hidden;
 }
-.hero::after{
-  content:"";
-  position:absolute; right:-40px; top:-40px;
-  width:160px; height:160px; border-radius:50%;
-  background:radial-gradient(circle, rgba(232,163,61,.35), transparent 70%);
-}
-.hero .kicker{color:var(--accent); font-weight:600; font-size:13px;}
-.hero h1{font-size:44px; margin:6px 0 8px;}
-.hero p{color:var(--text-dim); font-size:14px; max-width:38ch;}
-.hero .cta{
-  margin-top:16px; display:inline-flex; align-items:center; gap:8px;
-  background:var(--accent); color:#1a1305; font-weight:700;
-  padding:11px 18px; border-radius:999px; font-size:14px;
-}
+@keyframes fadeIn{from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);}}
 
-/* ---------- Horizontal scroll (À la une) ---------- */
-.hscroll{
-  display:flex; gap:12px; overflow-x:auto; padding:2px 2px 10px;
-  scroll-snap-type:x mandatory;
+.lamp-scene{cursor:pointer; user-select:none; padding-top:6px;}
+.cord{width:2px; height:46px; background:#3a4048; margin:0 auto; transition:height .25s ease;}
+.lamp-scene:active .cord{height:56px;}
+.bulb{
+  width:28px; height:28px; border-radius:50%; background:#30343b; margin:0 auto;
+  box-shadow:none; transition:background .5s ease, box-shadow .5s ease;
 }
-.hscroll::-webkit-scrollbar{display:none;}
-.feature-card{
-  scroll-snap-align:start;
-  flex:0 0 68%;
-  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-  overflow:hidden;
-}
-.feature-card .cover{
-  height:120px;
-  background:linear-gradient(135deg, var(--seg-2), var(--seg-4));
-  display:flex;align-items:flex-end; padding:10px;
-}
-.feature-card .cover span{
-  background:rgba(0,0,0,.35); backdrop-filter:blur(2px);
-  font-size:11px; font-weight:600; padding:4px 8px; border-radius:6px;
-}
-.feature-card .body{padding:12px 14px 16px;}
-.feature-card .body h3{font-size:18px; font-weight:600; font-family:'Inter'; margin-bottom:2px;}
-.feature-card .body p{font-size:12.5px; color:var(--text-dim);}
+.bulb.on{background:#ffe98a; box-shadow:0 0 16px 6px rgba(255,233,138,.55), 0 0 46px 18px rgba(255,233,138,.35);}
 
-/* ---------- Release list (Sorties) ---------- */
-.release{
-  display:flex; align-items:center; gap:12px;
-  background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--radius); padding:10px; margin-bottom:10px;
+.robot-face{
+  width:72px; height:72px; border-radius:50%; background:#161b22; margin:22px auto 0;
+  position:relative; opacity:.35; filter:grayscale(1) brightness(.6);
+  transition:opacity .6s ease, filter .6s ease, box-shadow .6s ease;
 }
-.release .art{
-  width:52px;height:52px;border-radius:10px;flex:none;
-  background:linear-gradient(135deg, var(--seg-1), var(--seg-6));
+.robot-face.lit{
+  opacity:1; filter:none;
+  box-shadow:0 0 28px 10px rgba(77,255,176,.45);
+  background:#0d1f16;
 }
-.release .info{flex:1; min-width:0;}
-.release .info h4{font-size:15px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.release .info span{font-size:12px; color:var(--text-dim);}
-.play-btn{
-  width:40px;height:40px;border-radius:50%; flex:none;
-  background:var(--bg-alt); border:1px solid var(--border);
-  color:var(--accent); font-size:16px;
-  display:flex;align-items:center;justify-content:center;
-}
-.play-btn.playing{background:var(--accent); color:#1a1305;}
+.robot-face .eyes{display:flex; justify-content:center; gap:15px; padding-top:24px;}
+.robot-face .eyes span{width:7px; height:7px; border-radius:50%; background:#3a4048; display:block; transition:background .4s ease, box-shadow .4s ease;}
+.robot-face.lit .eyes span{background:#4dffb0; box-shadow:0 0 8px #4dffb0;}
+.robot-face .mouth{width:20px; height:5px; border-radius:0 0 10px 10px; background:#3a4048; margin:8px auto 0; transition:background .4s ease;}
+.robot-face.lit .mouth{background:#4dffb0;}
 
-/* ---------- Concerts ---------- */
-.ticket{
-  display:flex; background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--radius); margin-bottom:12px; overflow:hidden;
-}
-.ticket .date{
-  width:66px; flex:none; background:var(--bg-alt);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  border-right:1px dashed var(--border);
-}
-.ticket .date .d{font-family:'Bebas Neue'; font-size:26px; color:var(--accent);}
-.ticket .date .m{font-size:11px; color:var(--text-dim); text-transform:uppercase;}
-.ticket .info{flex:1; padding:12px 14px;}
-.ticket .info h4{font-size:15px; font-weight:600;}
-.ticket .info span{font-size:12.5px; color:var(--text-dim); display:block; margin-top:2px;}
-.ticket .actions{display:flex; gap:8px; margin-top:10px;}
-.btn-mini{
-  font-size:12px; font-weight:600; padding:7px 12px; border-radius:8px;
-}
-.btn-mini.primary{background:var(--accent); color:#1a1305;}
-.btn-mini.ghost{background:transparent; border:1px solid var(--border); color:var(--text);}
+.pull-hint{font-size:12px; color:#6e7681; margin-top:16px; animation:pulseHint 1.6s ease-in-out infinite;}
+@keyframes pulseHint{0%,100%{opacity:.45;} 50%{opacity:1;}}
 
-/* ---------- Points / Roue ---------- */
-.points-card{
-  background:linear-gradient(160deg, var(--bg-card), var(--bg-alt));
-  border:1px solid var(--border); border-radius:20px; padding:22px;
-  text-align:center;
+.login-form{display:none;}
+.login-form.show{display:block; animation:fadeIn .6s ease;}
+.login-form h2{font-size:26px; margin-bottom:4px;}
+.login-form .sub{color:#8b949e; font-size:12.5px; margin-bottom:18px;}
+.login-form .auth-toggle{background:#161b22; border:1px solid #21262d;}
+.login-form .auth-toggle button.active{background:#00aaff; color:#fff;}
+.login-form input{
+  width:100%; padding:12px 14px; margin:0 0 14px; border:none; border-radius:8px;
+  background:#161b22; color:#fff; outline:none; font-size:14px; box-sizing:border-box; font-family:inherit;
 }
-.points-card .label{font-size:13px; color:var(--text-dim); font-weight:600;}
-.points-card .value{font-family:'Bebas Neue'; font-size:52px; color:var(--accent); margin:4px 0;}
-.progress{
-  height:8px; background:var(--bg-alt); border-radius:99px; overflow:hidden; margin-top:10px;
-  border:1px solid var(--border);
+.login-btn{
+  width:100%; padding:13px 0; margin-top:6px; border:none; border-radius:8px;
+  background:linear-gradient(45deg,#00aaff,#007bff); color:#fff; font-weight:bold;
+  font-size:14.5px; cursor:pointer; transition:box-shadow .25s;
 }
-.progress-fill{height:100%; background:var(--accent-2); width:0%; transition:width .4s ease;}
-.progress-note{font-size:11.5px; color:var(--text-dim); margin-top:6px;}
+.login-btn:hover, .login-btn:active{box-shadow:0 0 20px #00aaff;}
+.login-btn:disabled{opacity:.6;}
 
-.earn-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px;}
-.milestone-banner{
-  margin-top:14px; padding:12px 14px; border-radius:12px;
-  background:linear-gradient(135deg, rgba(232,163,61,.18), rgba(255,77,109,.12));
-  border:1px solid var(--border); font-size:13px; color:var(--text);
-  display:flex; align-items:center; gap:10px;
+.status-pill{
+  display:inline-flex; align-items:center; gap:6px; font-size:11.5px;
+  padding:5px 10px; border-radius:999px; margin-bottom:18px;
+  background:var(--bg-card); border:1px solid var(--border); color:var(--text-dim);
 }
-.earn-btn{
-  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-  padding:14px 10px; text-align:left;
-}
-.earn-btn .plus{color:var(--accent-2); font-family:'Bebas Neue'; font-size:20px;}
-.earn-btn .lbl{font-size:12.5px; color:var(--text-dim); margin-top:2px; display:block;}
-.earn-btn:disabled{opacity:.45;}
+.status-pill i{width:7px;height:7px;border-radius:50%; background:var(--accent-2);}
+.status-pill.ok i{background:#6fcf97;}
 
-.wheel-wrap{
-  display:flex; flex-direction:column; align-items:center; margin-top:28px;
-}
-.wheel-shell{position:relative; width:250px; height:250px;}
-.pointer{
-  position:absolute; top:-6px; left:50%; transform:translateX(-50%);
-  width:0; height:0; z-index:3;
-  border-left:12px solid transparent; border-right:12px solid transparent;
-  border-top:20px solid var(--accent-2);
-}
-.wheel{
-  width:100%; height:100%; border-radius:50%;
-  border:6px solid var(--bg-card);
-  box-shadow:0 0 0 2px var(--border), 0 20px 40px rgba(0,0,0,.4);
-  position:relative;
-}
-.wheel-sheen{
-  position:absolute; inset:0; border-radius:50%; z-index:1; pointer-events:none;
-  background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.22), transparent 55%);
-}
-.wheel-shell.spinning .wheel{
-  filter:drop-shadow(0 0 18px rgba(255,77,109,.35));
-}
-.wheel-center{
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  width:54px; height:54px; border-radius:50%;
-  background:var(--bg); border:3px solid var(--accent);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'Bebas Neue'; font-size:14px; color:var(--accent);
-  z-index:2;
-}
-.spin-btn{
-  margin-top:20px; background:var(--accent-2); color:#fff; font-weight:700;
-  padding:13px 26px; border-radius:999px; font-size:14px;
-}
-.spin-btn:disabled{background:var(--bg-alt); color:var(--text-dim);}
-.spin-btn.spin-locked{opacity:.55;}
-.wheel-legend{
-  display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:16px;
-}
-.wheel-legend span{
-  font-size:11px; color:var(--text-dim); display:flex; align-items:center; gap:5px;
-}
-.wheel-legend i{width:8px;height:8px;border-radius:50%; display:inline-block;}
+h2{font-size:30px; margin-bottom:4px;}
+.sub{color:var(--text-dim); font-size:13px; margin-bottom:22px;}
 
-/* ---------- Soutenir ---------- */
-.support-card{
-  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
-  padding:18px; margin-top:14px;
-}
-.support-card h3{font-family:'Inter'; font-size:16px; font-weight:600; margin-bottom:4px;}
-.support-card p{font-size:13px; color:var(--text-dim); margin-bottom:14px;}
-.amounts{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
-.amount-btn{
-  background:var(--bg-alt); border:1px solid var(--border); color:var(--text);
-  padding:10px 0; border-radius:10px; font-size:13px; font-weight:600;
-}
-.amount-btn.selected{background:var(--accent); color:#1a1305; border-color:var(--accent);}
-.support-send{
-  width:100%; margin-top:14px; background:var(--accent-2); color:#fff;
-  padding:13px; border-radius:10px; font-weight:700; font-size:14px;
-}
+.auth-toggle{display:flex; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:18px;}
+.auth-toggle button{flex:1; padding:10px 0; border-radius:9px; font-size:13px; font-weight:600; color:var(--text-dim); background:transparent;}
+.auth-toggle button.active{background:var(--accent); color:#1a1305;}
 
-.promo-input{
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;}
+.field input, .field select, .field textarea{
   width:100%; background:var(--bg-alt); border:1px solid var(--border); color:var(--text);
-  padding:12px 14px; border-radius:10px; font-size:14px; margin-bottom:10px; font-family:inherit;
+  padding:13px 14px; border-radius:10px; font-size:14px; font-family:inherit;
 }
-.promo-btn{
+.field textarea{resize:vertical; min-height:90px;}
+
+.submit-btn{
   width:100%; background:var(--accent); color:#1a1305; font-weight:700;
-  padding:12px; border-radius:10px; font-size:13.5px;
+  padding:14px; border-radius:10px; font-size:14.5px; margin-top:4px;
+  box-shadow:0 0 0 rgba(232,163,61,0); transition:box-shadow .3s ease;
 }
-.promo-btn.ghost{background:var(--bg-alt); color:var(--text); border:1px solid var(--border);}
+.submit-btn:active{box-shadow:0 0 22px var(--accent);}
+.submit-btn:disabled{opacity:.5;}
+.error-msg{color:var(--accent-2); font-size:12.5px; margin:-8px 0 12px; display:none;}
+.error-msg.show{display:block;}
 
-.fan-auth-toggle{display:flex; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:14px;}
-.fan-auth-toggle button{flex:1; padding:9px 0; border-radius:9px; font-size:13px; font-weight:600; color:var(--text-dim); background:transparent;}
-.fan-auth-toggle button.active{background:var(--accent); color:#1a1305;}
-
-/* ---------- Result modal ---------- */
-.modal-overlay{
-  position:fixed; inset:0; background:rgba(10,8,16,.72);
-  display:none; align-items:center; justify-content:center; z-index:50; padding:24px;
-}
-.modal-overlay.show{display:flex;}
-.modal{
-  background:var(--bg-card); border:1px solid var(--border); border-radius:18px;
-  padding:28px 22px; text-align:center; max-width:320px; width:100%;
-}
-.modal .emoji{font-size:38px;}
-.modal h3{font-family:'Bebas Neue'; font-size:28px; color:var(--accent); margin:10px 0 6px;}
-.modal p{font-size:13px; color:var(--text-dim); margin-bottom:18px;}
-.modal button{
-  background:var(--accent); color:#1a1305; font-weight:700;
-  padding:11px 24px; border-radius:999px; font-size:14px;
+.card{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:20px; margin-bottom:20px;
 }
 
-.legal-modal{max-width:360px; text-align:left; max-height:78vh; display:flex; flex-direction:column;}
-.legal-modal h3{text-align:center; margin-bottom:12px;}
-.legal-body{
-  overflow-y:auto; font-size:13px; line-height:1.55; color:var(--text-dim);
-  margin-bottom:16px; padding-right:2px;
-}
-.legal-body p{margin-bottom:10px;}
-.legal-body strong{color:var(--text);}
-.legal-modal button{align-self:center;}
+.section-title{font-size:14px; font-weight:600; color:var(--text-dim); margin:26px 0 12px;}
 
-.legal-row{
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  margin-top:24px; font-size:12px; color:var(--text-dim);
+.post-row{
+  display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border);
+  border-radius:12px; padding:12px 14px; margin-bottom:8px;
 }
-.legal-row a{text-decoration:underline;}
-.legal-row span{opacity:.5;}
+.post-row .p-info{flex:1; min-width:0;}
+.post-row .p-info h4{font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.post-row .p-info span{font-size:11.5px; color:var(--text-dim);}
+.post-del{
+  width:36px; height:36px; border-radius:9px; background:var(--bg-alt); border:1px solid var(--border); color:var(--accent-2);
+  font-size:15px; flex:none;
+}
+.empty{text-align:center; padding:30px 10px; color:var(--text-dim); font-size:13px;}
 
-/* ---------- Toast ---------- */
+.logout-link{
+  display:block; text-align:center; margin-top:22px; color:var(--text-dim);
+  font-size:13px; text-decoration:underline;
+}
+
 .toast{
-  position:fixed; bottom:calc(90px + var(--safe-bottom)); left:50%; transform:translateX(-50%);
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
   background:var(--bg-card); border:1px solid var(--border); color:var(--text);
-  padding:10px 18px; border-radius:999px; font-size:13px;
+  padding:11px 20px; border-radius:999px; font-size:13px;
   opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
   z-index:60;
 }
 .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
-
-/* ---------- Bottom nav ---------- */
-.tabbar{
-  position:fixed; bottom:0; left:0; right:0;
-  background:rgba(20,16,31,.92); backdrop-filter:blur(10px);
-  border-top:1px solid var(--border);
-  display:flex;
-  padding-bottom:var(--safe-bottom);
-  z-index:40;
-}
-.tabs-row{display:flex; width:100%;}
-.tab{
-  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-  padding:11px 0 9px; color:var(--text-dim); font-size:10.5px; font-weight:600;
-}
-.tab svg{width:21px; height:21px;}
-.tab.active{color:var(--accent);}
-
-/* ---------- Actualités (posts admin) sur l'accueil ---------- */
-.news-item{
-  display:flex; gap:10px; background:var(--bg-card); border:1px solid var(--border);
-  border-radius:var(--radius); padding:12px; margin-bottom:10px;
-}
-.news-item .tag-dot{
-  width:34px; height:34px; border-radius:10px; flex:none;
-  display:flex; align-items:center; justify-content:center; font-size:16px;
-}
-.news-item.type-prestation .tag-dot{background:rgba(232,163,61,.18); color:var(--accent);}
-.news-item.type-sortie .tag-dot{background:rgba(255,77,109,.18); color:var(--accent-2);}
-.news-item.type-collab .tag-dot{background:rgba(139,123,216,.18); color:#8b7bd8;}
-.news-item.type-alerte .tag-dot{background:rgba(111,207,151,.18); color:#6fcf97;}
-.news-item .body h4{font-size:14px; font-weight:600;}
-.news-item .body p{font-size:12.5px; color:var(--text-dim); margin-top:2px;}
-.news-item .body span{font-size:11px; color:var(--text-dim); opacity:.7;}
-
-/* ---------- Admin ---------- */
-.admin-overlay{
-  position:fixed; inset:0; background:var(--bg); z-index:80;
-  display:none; overflow-y:auto; padding:24px 20px 40px;
-}
-.admin-overlay.show{display:block;}
-.admin-overlay h2{font-size:26px; margin-bottom:4px;}
-.admin-overlay .sub{color:var(--text-dim); font-size:13px; margin-bottom:20px;}
-.admin-close{
-  position:absolute; top:20px; right:20px;
-  width:36px; height:36px; border-radius:50%;
-  background:var(--bg-alt); border:1px solid var(--border); color:var(--text);
-}
-.auth-toggle{display:flex; background:var(--bg-alt); border:1px solid var(--border); border-radius:12px; padding:4px; margin-bottom:16px;}
-.auth-toggle button{flex:1; padding:9px 0; border-radius:9px; font-size:13px; font-weight:600; color:var(--text-dim); background:transparent;}
-.auth-toggle button.active{background:var(--accent); color:#1a1305;}
-.field{margin-bottom:14px;}
-.field label{display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;}
-.field input, .field select, .field textarea{
-  width:100%; background:var(--bg-alt); border:1px solid var(--border); color:var(--text);
-  padding:12px 14px; border-radius:10px; font-size:14px; font-family:inherit;
-}
-.field textarea{resize:vertical; min-height:80px;}
-.admin-submit{
-  width:100%; background:var(--accent); color:#1a1305; font-weight:700;
-  padding:13px; border-radius:10px; font-size:14px; margin-top:4px;
-}
-.admin-error{color:var(--accent-2); font-size:12.5px; margin-top:-6px; margin-bottom:10px; display:none;}
-.admin-error.show{display:block;}
-.post-row{
-  display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--border);
-  border-radius:12px; padding:10px 12px; margin-bottom:8px;
-}
-.post-row .p-info{flex:1; min-width:0;}
-.post-row .p-info h4{font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.post-row .p-info span{font-size:11px; color:var(--text-dim);}
-.post-del{
-  width:32px; height:32px; border-radius:8px; background:var(--bg-alt); border:1px solid var(--border); color:var(--accent-2);
-}
-.logout-link{display:block; text-align:center; margin-top:20px; color:var(--text-dim); font-size:13px; text-decoration:underline;}
-
-.empty{
-  text-align:center; padding:40px 10px; color:var(--text-dim); font-size:13px;
-}
-
-.social-row{display:flex; gap:10px; flex-wrap:wrap;}
-.social-btn{
-  width:50px; height:50px; border-radius:50%;
-  background:var(--bg-card); border:1px solid var(--border);
-  display:flex; align-items:center; justify-content:center;
-  font-size:21px;
-}
-
 </style>
 </head>
 <body>
 
-<div id="splash">
-  <div class="splash-mark"><div class="ring"></div><span>B10</span></div>
-  <h1 class="display">BENRU 10</h1>
-  <div class="splash-credit"><span>FST PRODUCTION</span></div>
-  <div class="splash-bar"><i></i></div>
+<div class="topline"><span class="dot"></span><span>ADMIN · ARTISTE</span></div>
+
+<!-- ===================== CONNEXION ===================== -->
+<div id="loginView">
+  <div class="login-container">
+
+    <div class="lamp-scene" id="lampScene" onclick="pullCord()">
+      <div class="cord"></div>
+      <div class="bulb" id="bulb"></div>
+      <div class="robot-face" id="robotFace">
+        <div class="eyes"><span></span><span></span></div>
+        <div class="mouth"></div>
+      </div>
+      <p class="pull-hint" id="pullHint">Vérification anti-robot — touche l'ampoule</p>
+    </div>
+
+    <div class="login-form" id="loginForm">
+      <h2>Bon retour</h2>
+      <p class="sub">Espace réservé à l'équipe de l'artiste</p>
+      <div id="fbStatus" class="status-pill">⏳ Connexion à la base…</div>
+
+      <div class="auth-toggle">
+        <button id="authTabPhone" class="active" onclick="setAuthMode('phone')">Numéro</button>
+        <button id="authTabEmail" onclick="setAuthMode('email')">Email</button>
+      </div>
+
+      <input id="authIdentifier" type="tel" placeholder="+226 70 00 00 00">
+      <input id="authPassword" type="password" placeholder="Mot de passe">
+      <div class="error-msg" id="authError"></div>
+      <button class="login-btn" id="loginBtn" onclick="adminLogin()">Se connecter</button>
+    </div>
+
+  </div>
 </div>
 
-<div id="appRoot" class="app-hidden">
+<!-- ===================== TABLEAU DE BORD ===================== -->
+<div id="dashView" style="display:none;">
+  <h2>Publier</h2>
+  <p class="sub">Visible immédiatement dans l'application fans</p>
 
-<div class="topbar">
-  <div class="brand"><span class="dot"></span>BENRU 10</div>
-  <div style="display:flex; gap:8px;">
-    <button class="icon-btn" id="notifBtn" onclick="openNotifications()">
-      ✉️<span class="notif-badge" id="notifBadge" style="display:none;"></span>
-    </button>
-    <button class="icon-btn" onclick="openInfoMenu()">ℹ️</button>
-    <button class="icon-btn" onclick="showToast('Recherche à brancher')">🔍</button>
+  <div class="card">
+    <div class="field">
+      <label>Type de publication</label>
+      <select id="postType" onchange="updateMediaField()">
+        <option value="prestation">🎤 Prochaine prestation</option>
+        <option value="sortie">🎵 Sortie de son</option>
+        <option value="collab">🤝 Collaboration</option>
+        <option value="alerte">🔔 Alerte / mise à jour</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Titre</label>
+      <input id="postTitle" type="text" placeholder="Ex : Nouveau son disponible">
+    </div>
+    <div class="field">
+      <label>Message</label>
+      <textarea id="postMessage" placeholder="Détails à afficher aux fans..."></textarea>
+    </div>
+    <div class="field">
+      <label>Date (facultatif)</label>
+      <input id="postDate" type="date">
+    </div>
+    <div class="field">
+      <label id="mediaFieldLabel">Photo (facultatif)</label>
+      <input id="postMedia" type="file" accept="image/*">
+      <div id="mediaFileName" style="font-size:12px; color:var(--text-dim); margin-top:6px;"></div>
+    </div>
+    <button class="submit-btn" id="publishBtn" onclick="publishPost()">Publier</button>
   </div>
+
+  <div class="section-title">Publications en ligne</div>
+  <div id="postList"></div>
+
+  <div class="section-title">Fonctionnement de l'application</div>
+  <div class="card">
+    <p class="sub" style="margin-bottom:12px;">Vidéo qui explique aux fans comment utiliser l'app. La nouvelle vidéo remplace l'ancienne.</p>
+    <div id="tutorialCurrentInfo" style="font-size:12.5px; color:var(--text-dim); margin-bottom:10px;">Chargement…</div>
+    <div class="field">
+      <label>Vidéo tuto</label>
+      <input id="tutorialFile" type="file" accept="video/*">
+      <div id="tutorialFileName" style="font-size:12px; color:var(--text-dim); margin-top:6px;"></div>
+    </div>
+    <button class="submit-btn" id="tutorialBtn" onclick="publishTutorial()">Publier la vidéo</button>
+  </div>
+
+  <div class="section-title">Codes promo — tours de roue (500f)</div>
+  <div id="promoList"></div>
+
+  <div class="section-title">Gagnants de la roue</div>
+  <div id="winnersList"></div>
+
+  <div class="section-title">Paliers collectifs (TikTok / Facebook)</div>
+  <div class="card">
+    <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:14px;">
+      Quand un palier d'abonnés est atteint, TOUS les fans actifs reçoivent automatiquement le bonus, une seule fois chacun. Aucun risque de triche individuelle.
+    </p>
+    <div class="field">
+      <label>Numéro de palier atteint (augmente à chaque fois, ex: 1, 2, 3...)</label>
+      <input id="milestoneReached" type="number" min="0" placeholder="Ex : 1">
+    </div>
+    <div class="field">
+      <label>Points bonus offerts à ce palier</label>
+      <input id="milestoneBonus" type="number" min="0" placeholder="Ex : 20">
+    </div>
+    <div class="field">
+      <label>Libellé (affiché aux fans)</label>
+      <input id="milestoneLabel" type="text" placeholder="Ex : 1000 abonnés TikTok !">
+    </div>
+    <button class="submit-btn" onclick="saveMilestone()">Enregistrer le palier</button>
+    <p id="milestoneCurrent" style="font-size:12px; color:var(--text-dim); margin-top:10px;"></p>
+  </div>
+
+  <a class="logout-link" onclick="adminLogout()">Se déconnecter</a>
 </div>
-
-<!-- ===================== ACCUEIL ===================== -->
-<section id="page-accueil" class="page active">
-  <div class="hero">
-    <div class="kicker">NOUVEAUTÉ</div>
-    <h1 id="heroTitle">Titre du dernier son</h1>
-    <p id="heroDesc">Écoute la dernière sortie de l'artiste et découvre les coulisses de sa création.</p>
-    <a class="cta" onclick="goTo('sorties')">▶ Écouter maintenant</a>
-  </div>
-
-  <div class="section-title">Actualités</div>
-  <div id="newsList"></div>
-
-  <div class="section-title">À la une</div>
-  <div class="hscroll" id="featuredList"></div>
-
-  <div class="section-title">Prochain concert</div>
-  <div id="nextConcert"></div>
-
-  <div class="section-title">Réseaux sociaux</div>
-  <div class="social-row" id="socialLinks"></div>
-</section>
-
-<!-- ===================== SORTIES ===================== -->
-<section id="page-sorties" class="page">
-  <h2 style="font-size:28px; margin:10px 0 4px;">Sorties récentes</h2>
-  <p style="color:var(--text-dim); font-size:13px; margin-bottom:16px;">Tous les titres, du plus récent au plus ancien.</p>
-  <div id="releaseList"></div>
-</section>
-
-<!-- ===================== CONCERTS ===================== -->
-<section id="page-concerts" class="page">
-  <h2 style="font-size:28px; margin:10px 0 4px;">Concerts</h2>
-  <p style="color:var(--text-dim); font-size:13px; margin-bottom:16px;">Dates à venir. Active les rappels pour ne rien rater.</p>
-  <div id="concertList"></div>
-</section>
-
-<!-- ===================== POINTS / SOUTIEN ===================== -->
-<section id="page-points" class="page">
-  <h2 style="font-size:28px; margin:10px 0 4px;">Mes points</h2>
-
-  <div id="fanAuthGate">
-    <div class="points-card" style="text-align:left;">
-      <h3 style="font-family:'Bebas Neue'; font-size:22px; margin-bottom:4px; letter-spacing:.02em;">Ton compte fan</h3>
-      <p style="font-size:12.5px; color:var(--text-dim); margin-bottom:14px;">Crée un compte pour gagner et garder tes points en sécurité, même si tu changes de téléphone.</p>
-      <div class="fan-auth-toggle">
-        <button id="fanTabLogin" class="active" onclick="setFanAuthMode('login')">Se connecter</button>
-        <button id="fanTabSignup" onclick="setFanAuthMode('signup')">Créer un compte</button>
-      </div>
-      <input id="fanPhoneInput" class="promo-input" type="tel" placeholder="Ton numéro : 70 00 00 00">
-      <input id="fanPasswordInput" class="promo-input" type="password" placeholder="Mot de passe">
-      <div id="fanAuthError" style="color:var(--accent-2); font-size:12.5px; margin:-4px 0 10px; display:none;"></div>
-      <button class="promo-btn" id="fanAuthBtn" onclick="submitFanAuth()">Se connecter</button>
-    </div>
-  </div>
-
-  <div id="fanPointsContent" style="display:none;">
-
-  <div class="points-card">
-    <div class="label">SOLDE ACTUEL</div>
-    <div class="value" id="pointsValue">0</div>
-    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-note" id="progressNote">250 points débloquent la roue des cadeaux</div>
-  </div>
-
-  <div class="earn-grid">
-    <button class="earn-btn" id="btnShare" onclick="earnShare()">
-      <div class="plus">+2</div>
-      <span class="lbl">Partager l'application</span>
-    </button>
-    <button class="earn-btn" id="btnYoutube" onclick="verifyYoutubeSub()">
-      <div class="plus">+2</div>
-      <span class="lbl">Abonné YouTube vérifié</span>
-    </button>
-    <button class="earn-btn" id="btnDaily" onclick="earnDaily()">
-      <div class="plus">+1</div>
-      <span class="lbl">Connexion du jour</span>
-    </button>
-    <button class="earn-btn" onclick="goTo('points'); document.getElementById('supportCard').scrollIntoView({behavior:'smooth'})">
-      <div class="plus">❤</div>
-      <span class="lbl">Soutenir l'artiste</span>
-    </button>
-  </div>
-
-  <div id="milestoneBanner" style="display:none;"></div>
-
-  <div class="section-title">Roue des cadeaux — 250 points le tour</div>
-  <div class="wheel-wrap">
-    <div class="wheel-shell">
-      <div class="pointer"></div>
-      <svg id="wheel" class="wheel" viewBox="0 0 200 200"></svg>
-      <div class="wheel-sheen"></div>
-      <div class="wheel-center">CADEAU</div>
-    </div>
-    <button class="spin-btn" id="spinBtn" onclick="spin()">Lancer la roue</button>
-  </div>
-
-  <div class="section-title">Pas encore 250 points ?</div>
-  <div class="support-card" id="promoCard">
-    <h3>Débloque un tour pour 500f</h3>
-    <p>Envoie 500f et reçois un code pour tourner la roue immédiatement, sans attendre tes points.</p>
-
-    <div id="promoGenerateView">
-      <button class="promo-btn" onclick="generatePromoCode()">Générer mon code</button>
-    </div>
-
-    <div id="promoCodeView" style="display:none;">
-      <div class="points-card" style="padding:16px; margin-bottom:14px;">
-        <div class="label">TON CODE</div>
-        <div class="value" id="promoCodeDisplay" style="font-size:34px;">—</div>
-      </div>
-      <p id="promoInstructions" style="margin-bottom:14px; font-size:13px; color:var(--text-dim);"></p>
-      <button class="promo-btn ghost" onclick="resetPromoView()">J'ai déjà un code à valider</button>
-    </div>
-
-    <div id="promoRedeemView" style="margin-top:16px;">
-      <label style="display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;">J'ai un code payé, débloquer mon tour</label>
-      <input id="promoRedeemInput" class="promo-input" type="text" placeholder="Ex : ART-4F7K2P" style="text-transform:uppercase;">
-      <button class="promo-btn" onclick="redeemPromoCode()">Valider mon code</button>
-    </div>
-  </div>
-
-  <div class="section-title">Soutenir l'artiste</div>
-  <div class="support-card" id="supportCard">
-    <h3>Fais un don libre</h3>
-    <p>Un geste simple pour encourager l'artiste dans ses prochains projets.</p>
-    <div class="amounts">
-      <button class="amount-btn" onclick="selectAmount(this,500)">500f</button>
-      <button class="amount-btn" onclick="selectAmount(this,1000)">1000f</button>
-      <button class="amount-btn" onclick="selectAmount(this,2000)">2000f</button>
-    </div>
-    <div class="field" style="margin-top:12px;">
-      <label style="display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;">Ou choisis ton propre montant</label>
-      <input id="customAmountInput" class="promo-input" type="number" min="50" placeholder="Ex : 750" oninput="selectCustomAmount(this.value)">
-    </div>
-    <button class="support-send" onclick="sendSupport()">Envoyer mon soutien</button>
-  </div>
-
-  <a onclick="fanSignOut()" style="display:block; text-align:center; margin-top:20px; color:var(--text-dim); font-size:12.5px; text-decoration:underline;">Se déconnecter</a>
-  </div>
-</section>
-
-<!-- ===================== TAB BAR ===================== -->
-<nav class="tabbar">
-  <div class="tabs-row">
-    <a class="tab active" data-tab="accueil" onclick="goTo('accueil')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-      Accueil
-    </a>
-    <a class="tab" data-tab="sorties" onclick="goTo('sorties')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>
-      Sorties
-    </a>
-    <a class="tab" data-tab="concerts" onclick="goTo('concerts')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      Concerts
-    </a>
-    <a class="tab" data-tab="points" onclick="goTo('points')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.6 6.8L12 17l-6.2 3.4 1.6-6.8L2.2 9l6.9-.7z"/></svg>
-      Points
-    </a>
-  </div>
-</nav>
 
 <div class="toast" id="toast"></div>
 
-<div class="modal-overlay" id="resultModal">
-  <div class="modal">
-    <div class="emoji">🎉</div>
-    <h3 id="resultTitle">300 F</h3>
-    <p id="resultDesc">Ton cadeau a été enregistré. L'équipe te contacte pour le versement.</p>
-    <div id="winnerPhoneBlock" style="display:none; text-align:left; margin-bottom:14px;">
-      <label style="display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px; font-weight:600;">Ton numéro, pour qu'on te contacte</label>
-      <input id="winnerPhoneInput" class="promo-input" type="tel" placeholder="Ex : 70 00 00 00">
-      <button class="promo-btn" style="margin-top:8px;" onclick="submitWinnerPhone()">Envoyer</button>
-      <div id="winnerPhoneConfirm" style="font-size:12px; color:var(--accent); margin-top:8px; display:none;">✅ Numéro envoyé, merci !</div>
-    </div>
-    <button onclick="closeModal()">Super !</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="infoMenuModal">
-  <div class="modal legal-modal" style="text-align:center;">
-    <h3>Infos</h3>
-    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
-      <button class="promo-btn" onclick="closeInfoMenu(); openTutorial();">🎬 Comment utiliser l'application</button>
-      <button class="promo-btn ghost" onclick="closeInfoMenu(); openLegal('about');">À propos</button>
-      <button class="promo-btn ghost" onclick="closeInfoMenu(); openLegal('terms');">Conditions d'utilisation</button>
-    </div>
-    <button onclick="closeInfoMenu()">Fermer</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="tutorialModal">
-  <div class="modal legal-modal">
-    <h3>Comment utiliser l'application</h3>
-    <div class="legal-body" id="tutorialBody"></div>
-    <button onclick="closeTutorial()">Fermer</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="legalModal">
-  <div class="modal legal-modal">
-    <h3 id="legalTitle">À propos</h3>
-    <div class="legal-body" id="legalBody"></div>
-    <button onclick="closeLegal()">Fermer</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="notifModal">
-  <div class="modal notif-modal">
-    <h3>Notifications</h3>
-    <div class="notif-list" id="notifList"></div>
-    <button onclick="closeNotifications()">Fermer</button>
-  </div>
-</div>
-
-</div><!-- /#appRoot -->
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 /* ============================================================
-   FIREBASE — remplace ces valeurs par celles de TON projet
-   (voir le fichier FIREBASE-SETUP.md pour les obtenir)
+   FIREBASE — colle EXACTEMENT la même config que dans index.html
+   (les deux apps doivent pointer vers le même projet Firebase)
+   Voir FIREBASE-SETUP.md pour l'obtenir.
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyCoGfXR-Eqljxg4xq8iEnz5Z84kv8irEmQ",
@@ -798,95 +306,166 @@ const firebaseConfig = {
   appId: "1:180638157079:web:72a5f35cf523d7a768cf52"
 };
 
-let db = null;
-let fanAuth = null;
-let firebaseReady = false;
+// Suffixe utilisé pour transformer un numéro de téléphone en email
+// technique (Firebase Authentication ne gère que email/mot de passe
+// nativement sans SMS payant). Le fan ne voit jamais cette adresse.
+const PHONE_EMAIL_SUFFIX = "@fstproduction.app";
+
+/* ⚠️ Cloudinary — hébergement gratuit des photos/sons/vidéos, sans
+   carte bancaire (contrairement à Firebase Storage). Voir
+   CLOUDINARY-SETUP.md pour créer ton compte et obtenir ces 2 valeurs. */
+const CLOUDINARY_CLOUD_NAME = "izoq6nfk";
+const CLOUDINARY_UPLOAD_PRESET = "Admis_html";
+
+let auth = null, db = null, firebaseReady = false;
 try{
   if(!firebaseConfig.apiKey.includes('COLLE_')){
     firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
     db = firebase.firestore();
-    fanAuth = firebase.auth();
     firebaseReady = true;
+    document.getElementById('fbStatus').innerHTML = '<i></i> Connecté à la base';
+    document.getElementById('fbStatus').classList.add('ok');
+  }else{
+    document.getElementById('fbStatus').textContent = '⚠️ Firebase non configuré (voir FIREBASE-SETUP.md)';
   }
 }catch(e){
-  console.warn('Firebase non configuré :', e);
-}
-</script>
-<script>
-/* ============================================================
-   DONNÉES — tout vient des publications faites depuis admin.html
-   (une seule collection Firestore "posts", filtrée par type ici)
-   ============================================================ */
-
-/* ============================================================
-   RÉSEAUX SOCIAUX — colle les vrais liens ici quand tu les as
-   ============================================================ */
-const socialLinks = {
-  youtube:   "https://youtube.com/@benru10officiel90?si=sU2kGTa_QiRyz7nW",
-  tiktok:    "https://www.tiktok.com/@benru102?_r=1&_t=ZS-99oHkf4rRTg",
-  spotify:   "",
-  instagram: "",
-  facebook:  "https://www.facebook.com/profile.php?id=100082958673451",
-  email:     "rubenzida10@gmail.com",
-};
-const SOCIAL_ICONS = {
-  youtube: `<svg viewBox="0 0 24 24" width="22" height="22"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"/><path d="M10 8.5v7l6-3.5-6-3.5z" fill="#fff"/></svg>`,
-  tiktok: `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M16.5 2c.4 2.2 1.8 3.7 4 4v3c-1.5.1-2.8-.3-4-1.1v6.4c0 3.4-2.7 6.1-6.1 6.1S4.3 17.7 4.3 14.3 7 8.2 10.4 8.2c.3 0 .7 0 1 .1v3.1c-.3-.1-.6-.2-1-.2-1.7 0-3.1 1.4-3.1 3.1s1.4 3.1 3.1 3.1 3.2-1.3 3.2-3V2h2.9z"/></svg>`,
-  spotify: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" d="M6.5 9.7c3.6-1 8-.6 10.8 1.1M7 13c3-.8 6.6-.5 9 1M7.5 16.1c2.5-.6 5.3-.4 7.3.8"/></svg>`,
-  instagram: `<svg viewBox="0 0 24 24" width="22" height="22"><defs><linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#FEE411"/><stop offset="35%" stop-color="#FD5949"/><stop offset="65%" stop-color="#D6249F"/><stop offset="100%" stop-color="#285AEB"/></linearGradient></defs><rect x="1" y="1" width="22" height="22" rx="6" fill="url(#igGrad)"/><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3.6" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17.1" cy="6.9" r="1" fill="#fff"/></svg>`,
-  facebook: `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="#1877F2"/><path fill="#fff" d="M13.6 21.9v-7.6h2.5l.4-3h-2.9v-1.9c0-.9.2-1.5 1.5-1.5h1.6V5.2c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.1H8.2v3h2.6v7.6h2.8z"/></svg>`,
-  email: `<svg viewBox="0 0 24 24" width="21" height="21"><rect x="2" y="4.5" width="20" height="15" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.7"/><path d="M3 6l9 6.5L21 6" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-};
-
-function renderSocial(){
-  const el = document.getElementById('socialLinks');
-  el.innerHTML = Object.keys(socialLinks).map(key=>`
-    <a class="social-btn" onclick="openSocial('${key}')">${SOCIAL_ICONS[key]}</a>
-  `).join('');
-}
-function openSocial(key){
-  const url = socialLinks[key];
-  if(!url){ showToast('Lien à venir'); return; }
-  if(key === 'email'){ window.location.href = 'mailto:' + url; return; }
-  window.open(url, '_blank');
-}
-
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
-function goTo(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
-  window.scrollTo({top:0});
+  document.getElementById('fbStatus').textContent = '⚠️ Erreur de connexion à Firebase';
+  console.error(e);
 }
 
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
+  const t = document.getElementById('toast');
+  t.textContent = msg;
   t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer=setTimeout(()=>t.classList.remove('show'), 2200);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
-/* ============================================================
-   RENDU DU CONTENU
-   ============================================================ */
+/* ---------- Séquence lampe → robot → formulaire ---------- */
+let cordPulled = false;
+function pullCord(){
+  if(cordPulled) return;
+  cordPulled = true;
+
+  document.getElementById('bulb').classList.add('on');
+  document.getElementById('pullHint').style.opacity = '0';
+
+  setTimeout(()=>{
+    document.getElementById('robotFace').classList.add('lit');
+  }, 350);
+
+  setTimeout(()=>{
+    document.getElementById('lampScene').style.display = 'none';
+    document.getElementById('loginForm').classList.add('show');
+  }, 1500);
+}
+
+/* ---------- Connexion ---------- */
+let authMode = 'phone';
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById('authTabPhone').classList.toggle('active', mode==='phone');
+  document.getElementById('authTabEmail').classList.toggle('active', mode==='email');
+  const input = document.getElementById('authIdentifier');
+  if(mode==='phone'){
+    input.type='tel'; input.placeholder='+226 70 00 00 00';
+  }else{
+    input.type='email'; input.placeholder='exemple@mail.com';
+  }
+}
+
+function identifierToEmail(identifier){
+  if(authMode==='email') return identifier;
+  const digits = identifier.replace(/\D/g,'');
+  return digits + PHONE_EMAIL_SUFFIX;
+}
+
+/* ---------- Protection anti brute-force (limite de tentatives) ---------- */
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MINUTES = 10;
+
+function getLoginAttempts(){
+  try{ return JSON.parse(localStorage.getItem('admin_login_attempts') || '{"count":0,"lockedUntil":0}'); }
+  catch(e){ return {count:0, lockedUntil:0}; }
+}
+function setLoginAttempts(data){
+  localStorage.setItem('admin_login_attempts', JSON.stringify(data));
+}
+function checkLockout(){
+  const data = getLoginAttempts();
+  if(data.lockedUntil && Date.now() < data.lockedUntil){
+    const minutesLeft = Math.ceil((data.lockedUntil - Date.now()) / 60000);
+    const errorEl = document.getElementById('authError');
+    errorEl.textContent = `Trop de tentatives. Réessaie dans ${minutesLeft} min.`;
+    errorEl.classList.add('show');
+    document.getElementById('loginBtn').disabled = true;
+    return true;
+  }
+  return false;
+}
+
+function adminLogin(){
+  const errorEl = document.getElementById('authError');
+  errorEl.classList.remove('show');
+
+  if(checkLockout()) return;
+
+  if(!firebaseReady){
+    errorEl.textContent = 'Firebase non configuré — voir FIREBASE-SETUP.md';
+    errorEl.classList.add('show');
+    return;
+  }
+  const identifier = document.getElementById('authIdentifier').value.trim();
+  const password = document.getElementById('authPassword').value;
+  if(!identifier || !password){
+    errorEl.textContent = 'Renseigne ton identifiant et ton mot de passe';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  const email = identifierToEmail(identifier);
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Connexion…';
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(()=>{
+      setLoginAttempts({count:0, lockedUntil:0});
+    })
+    .catch(err=>{
+      const data = getLoginAttempts();
+      data.count = (data.count || 0) + 1;
+      if(data.count >= MAX_ATTEMPTS){
+        data.lockedUntil = Date.now() + LOCKOUT_MINUTES * 60000;
+        data.count = 0;
+        errorEl.textContent = `Trop de tentatives. Réessaie dans ${LOCKOUT_MINUTES} min.`;
+      } else {
+        errorEl.textContent = `Identifiants incorrects (${MAX_ATTEMPTS - data.count} essai(s) restant(s))`;
+      }
+      setLoginAttempts(data);
+      errorEl.classList.add('show');
+    })
+    .finally(()=>{
+      btn.disabled = false; btn.textContent = 'Se connecter';
+    });
+}
+
+function adminLogout(){
+  if(auth) auth.signOut();
+}
+
+if(firebaseReady){
+  auth.onAuthStateChanged(user=>{
+    document.getElementById('loginView').style.display = user ? 'none' : 'block';
+    document.getElementById('dashView').style.display = user ? 'block' : 'none';
+    if(user) { listenPosts(); listenPromoCodes(); listenTutorialAdmin(); listenWinners(); }
+    else { checkLockout(); }
+  });
+}
+
+/* ---------- Publications ---------- */
 const NEWS_ICONS = {prestation:'🎤', sortie:'🎵', collab:'🤝', alerte:'🔔'};
 const NEWS_LABELS = {prestation:'Prestation', sortie:'Sortie', collab:'Collaboration', alerte:'Alerte'};
-
-/* Sécurité : empêche qu'un titre/message contenant du code HTML
-   (ex: <script>) s'exécute dans l'app. Tout texte venant des
-   publications admin doit passer par ici avant d'être affiché. */
-function escapeHTML(str){
-  if(str === null || str === undefined) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
 
 function formatPostDate(d){
   if(!d) return '';
@@ -895,969 +474,259 @@ function formatPostDate(d){
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }
 
-function handleMediaError(el){
-  const fallback = document.createElement('p');
-  fallback.style.cssText = 'font-size:12px;color:var(--text-dim);margin-top:8px;';
-  fallback.textContent = '⚠️ Média indisponible';
-  el.replaceWith(fallback);
+/* Le type de fichier accepté change selon la publication :
+   photo pour les prestations/collab/alerte, audio ou vidéo pour les sorties. */
+function updateMediaField(){
+  const type = document.getElementById('postType').value;
+  const input = document.getElementById('postMedia');
+  const label = document.getElementById('mediaFieldLabel');
+  if(type === 'sortie'){
+    input.accept = 'audio/*,video/*';
+    label.textContent = 'Fichier audio ou vidéo (facultatif)';
+  } else {
+    input.accept = 'image/*';
+    label.textContent = 'Photo (facultatif)';
+  }
+  input.value = '';
+  document.getElementById('mediaFileName').textContent = '';
 }
+document.getElementById('postMedia').addEventListener('change', function(){
+  document.getElementById('mediaFileName').textContent = this.files[0] ? this.files[0].name : '';
+});
 
-function mediaHTML(p){
-  if(!p.mediaUrl) return '';
-  if(p.mediaType === 'image'){
-    return `<img src="${p.mediaUrl}" alt="" style="width:100%; border-radius:10px; margin-top:10px; display:block;" onerror="handleMediaError(this)">`;
-  }
-  if(p.mediaType === 'audio'){
-    return `<audio controls src="${p.mediaUrl}" style="width:100%; margin-top:10px;" onerror="handleMediaError(this)"></audio>`;
-  }
-  if(p.mediaType === 'video'){
-    return `<video controls src="${p.mediaUrl}" style="width:100%; border-radius:10px; margin-top:10px; display:block;" onerror="handleMediaError(this)"></video>`;
-  }
-  return '';
-}
+function publishPost(){
+  const type = document.getElementById('postType').value;
+  const title = document.getElementById('postTitle').value.trim();
+  const message = document.getElementById('postMessage').value.trim();
+  const date = document.getElementById('postDate').value;
+  const file = document.getElementById('postMedia').files[0];
 
-function renderNewsFromPosts(posts){
-  const el = document.getElementById('newsList');
-  if(!posts || posts.length===0){
-    el.innerHTML = `<div class="empty">Aucune actualité pour le moment</div>`;
+  if(!title || !message){
+    showToast('Ajoute un titre et un message');
     return;
   }
-  el.innerHTML = posts.slice(0,6).map(p=>`
-    <div class="news-item type-${p.type}">
-      <div class="tag-dot">${NEWS_ICONS[p.type]||'📌'}</div>
-      <div class="body">
-        <h4>${escapeHTML(p.title)}</h4>
-        <p>${escapeHTML(p.message)}</p>
-        <span>${NEWS_LABELS[p.type]||''}${p.date ? ' · '+formatPostDate(p.date) : ''}</span>
-        ${mediaHTML(p)}
-      </div>
-    </div>
-  `).join('');
-}
 
-let latestPosts = [];
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true;
 
-function renderNews(){
-  const el = document.getElementById('newsList');
-  if(!firebaseReady){
-    el.innerHTML = `<div class="empty">Actualités indisponibles pour le moment</div>`;
+  const basePost = {
+    type, title, message, date,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  function finishPublish(mediaFields){
+    db.collection('posts').add({...basePost, ...mediaFields}).then(()=>{
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postMessage').value = '';
+      document.getElementById('postDate').value = '';
+      document.getElementById('postMedia').value = '';
+      document.getElementById('mediaFileName').textContent = '';
+      btn.disabled = false;
+      showToast('Publication en ligne');
+    }).catch(()=>{
+      btn.disabled = false;
+      showToast('Échec de la publication');
+    });
+  }
+
+  if(!file){
+    finishPublish({});
     return;
   }
+
+  if(!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET){
+    btn.disabled = false;
+    showToast('Hébergement de fichiers à configurer — voir CLOUDINARY-SETUP.md');
+    return;
+  }
+
+  btn.textContent = 'Envoi du fichier…';
+  const mediaType = file.type.startsWith('audio/') ? 'audio'
+    : file.type.startsWith('video/') ? 'video'
+    : 'image';
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if(!data.secure_url) throw new Error('upload failed');
+      btn.textContent = 'Publier';
+      finishPublish({mediaUrl: data.secure_url, mediaType});
+    })
+    .catch(()=>{
+      btn.textContent = 'Publier';
+      btn.disabled = false;
+      showToast("Échec de l'envoi du fichier");
+    });
+}
+
+function deletePost(id){
+  db.collection('posts').doc(id).delete()
+    .then(()=> showToast('Publication supprimée'))
+    .catch(err=> showToast('Échec de la suppression'));
+}
+
+function listenPosts(){
   db.collection('posts').orderBy('createdAt','desc').limit(30)
     .onSnapshot(snapshot=>{
       const posts = snapshot.docs.map(d=>({id:d.id, ...d.data()}));
-      latestPosts = posts;
-      renderNewsFromPosts(posts);
-      renderHome();
-      renderReleases();
-      renderConcerts();
-      updateNotifBadge();
-    }, err=>{
-      console.warn('Lecture Firebase impossible :', err);
-      el.innerHTML = `<div class="empty">Impossible de charger les actualités</div>`;
-    });
-}
-
-/* ---------- Notifications (enveloppe) — réutilise les mêmes publications admin ---------- */
-const NOTIF_SEEN_KEY = 'artiste_app_notif_seen_at';
-
-function updateNotifBadge(){
-  const seenAt = parseInt(localStorage.getItem(NOTIF_SEEN_KEY) || '0', 10);
-  const hasNew = latestPosts.some(p => p.createdAt && p.createdAt.toMillis && p.createdAt.toMillis() > seenAt);
-  document.getElementById('notifBadge').style.display = hasNew ? 'block' : 'none';
-}
-
-function openNotifications(){
-  const el = document.getElementById('notifList');
-  el.innerHTML = latestPosts.length > 0 ? latestPosts.map(p=>`
-    <div class="news-item type-${p.type}">
-      <div class="tag-dot">${NEWS_ICONS[p.type]||'📌'}</div>
-      <div class="body">
-        <h4>${escapeHTML(p.title)}</h4>
-        <p>${escapeHTML(p.message)}</p>
-        <span>${NEWS_LABELS[p.type]||''}${p.date ? ' · '+formatPostDate(p.date) : ''}</span>
-      </div>
-    </div>
-  `).join('') : `<div class="empty">Aucune notification pour le moment</div>`;
-
-  document.getElementById('notifModal').classList.add('show');
-
-  const mostRecent = latestPosts.reduce((max,p)=>{
-    const t = p.createdAt && p.createdAt.toMillis ? p.createdAt.toMillis() : 0;
-    return Math.max(max,t);
-  }, 0);
-  if(mostRecent > 0) localStorage.setItem(NOTIF_SEEN_KEY, String(mostRecent));
-  document.getElementById('notifBadge').style.display = 'none';
-}
-function closeNotifications(){
-  document.getElementById('notifModal').classList.remove('show');
-}
-
-/* ---------- Accueil : dérivé des mêmes publications (sorties + prestations) ---------- */
-function renderHome(){
-  const releases = latestPosts.filter(p => p.type === 'sortie');
-  const concerts = latestPosts.filter(p => p.type === 'prestation');
-
-  document.getElementById('heroTitle').textContent = releases.length > 0 ? releases[0].title : "Bientôt disponible";
-
-  const featuredEl = document.getElementById('featuredList');
-  const featured = releases.slice(0, 5);
-  featuredEl.innerHTML = featured.length > 0 ? featured.map(r=>`
-    <div class="feature-card">
-      <div class="cover"><span>${NEWS_LABELS[r.type]||''}</span></div>
-      <div class="body"><h3>${escapeHTML(r.title)}</h3><p>${r.date ? formatPostDate(r.date) : ''}</p></div>
-    </div>
-  `).join('') : `<div class="empty">Rien à la une pour le moment</div>`;
-
-  const nextEl = document.getElementById('nextConcert');
-  nextEl.innerHTML = concerts.length > 0 ? ticketHTML(concerts[0]) : `<div class="empty">Aucun concert annoncé pour le moment</div>`;
-}
-
-/* ---------- Sorties : les publications de type "sortie", avec le vrai lecteur ---------- */
-function renderReleases(){
-  const el = document.getElementById('releaseList');
-  const releases = latestPosts.filter(p => p.type === 'sortie');
-  if(releases.length === 0){
-    el.innerHTML = `<div class="empty">Aucune sortie pour le moment</div>`;
-    return;
-  }
-  el.innerHTML = releases.map(r=>`
-    <div class="release" style="flex-wrap:wrap;">
-      <div class="art"></div>
-      <div class="info">
-        <h4>${escapeHTML(r.title)}</h4>
-        <span>${r.date ? formatPostDate(r.date) : ''}</span>
-      </div>
-      ${r.mediaUrl ? '' : `<span style="font-size:11px; color:var(--text-dim);">Pas encore de fichier</span>`}
-      ${r.mediaUrl && r.mediaType!=='audio' ? '' : ''}
-      <div style="width:100%;">${mediaHTML(r)}</div>
-    </div>
-  `).join('');
-}
-
-/* ---------- Concerts : les publications de type "prestation" ---------- */
-function ticketHTML(c){
-  const parts = (c.date||'').split('-');
-  const months = ['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'];
-  const day = parts.length===3 ? parts[2] : '--';
-  const month = parts.length===3 ? months[parseInt(parts[1],10)-1] : '';
-  return `
-    <div class="ticket">
-      <div class="date"><div class="d">${day}</div><div class="m">${month}</div></div>
-      <div class="info">
-        <h4>${escapeHTML(c.title)}</h4>
-        <span>${escapeHTML(c.message||'')}</span>
-        ${mediaHTML(c)}
-        <div class="actions">
-          <button class="btn-mini primary" onclick="showToast('Billetterie à brancher')">Billet</button>
-          <button class="btn-mini ghost" onclick="showToast('Rappel activé')">Rappel</button>
-        </div>
-      </div>
-    </div>`;
-}
-
-function renderConcerts(){
-  const el = document.getElementById('concertList');
-  const concerts = latestPosts.filter(p => p.type === 'prestation');
-  el.innerHTML = concerts.length > 0
-    ? concerts.map(ticketHTML).join('')
-    : `<div class="empty">Aucun concert annoncé pour le moment</div>`;
-}
-
-/* ============================================================
-   COMPTE FAN — étape 1 du chantier anti-triche
-   Numéro + mot de passe, transformé en email technique pour
-   Firebase Authentication (le fan ne voit jamais cette adresse).
-   ============================================================ */
-const FAN_EMAIL_SUFFIX = "@benru10fan.app";
-let fanAuthMode = 'login';
-let currentFanUid = null;
-
-function phoneToFanEmail(phone){
-  const digits = phone.replace(/\D/g,'');
-  return digits + FAN_EMAIL_SUFFIX;
-}
-
-function setFanAuthMode(mode){
-  fanAuthMode = mode;
-  document.getElementById('fanTabLogin').classList.toggle('active', mode==='login');
-  document.getElementById('fanTabSignup').classList.toggle('active', mode==='signup');
-  document.getElementById('fanAuthBtn').textContent = mode==='login' ? 'Se connecter' : 'Créer mon compte';
-  document.getElementById('fanAuthError').style.display = 'none';
-}
-
-function submitFanAuth(){
-  const errorEl = document.getElementById('fanAuthError');
-  errorEl.style.display = 'none';
-
-  if(!firebaseReady || !fanAuth){
-    showToast('Connexion indisponible pour le moment');
-    return;
-  }
-  const phone = document.getElementById('fanPhoneInput').value.trim();
-  const password = document.getElementById('fanPasswordInput').value;
-  if(!phone || !password){
-    errorEl.textContent = 'Entre ton numéro et ton mot de passe';
-    errorEl.style.display = 'block';
-    return;
-  }
-  if(password.length < 6){
-    errorEl.textContent = 'Le mot de passe doit faire au moins 6 caractères';
-    errorEl.style.display = 'block';
-    return;
-  }
-
-  const email = phoneToFanEmail(phone);
-  const btn = document.getElementById('fanAuthBtn');
-  btn.disabled = true;
-
-  const action = fanAuthMode === 'login'
-    ? fanAuth.signInWithEmailAndPassword(email, password)
-    : fanAuth.createUserWithEmailAndPassword(email, password);
-
-  action.then(cred => {
-    if(fanAuthMode === 'signup'){
-      return db.collection('fanUsers').doc(cred.user.uid).set({
-        phone,
-        points: 0,
-        bonusSpins: 0,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-  }).catch(err => {
-    if(fanAuthMode === 'login'){
-      errorEl.textContent = 'Numéro ou mot de passe incorrect (' + err.code + ')';
-    } else {
-      errorEl.textContent = err.code === 'auth/email-already-in-use'
-        ? 'Un compte existe déjà avec ce numéro — connecte-toi plutôt'
-        : "Erreur : " + err.code + " — " + err.message;
-    }
-    errorEl.style.display = 'block';
-    console.error('Erreur auth fan :', err);
-  }).finally(()=>{
-    btn.disabled = false;
-  });
-}
-
-function fanSignOut(){
-  if(fanAuth) fanAuth.signOut();
-}
-
-function ensureFanDoc(uid, email){
-  const ref = db.collection('fanUsers').doc(uid);
-  return ref.get().then(doc=>{
-    if(!doc.exists){
-      const phone = (email || '').replace(FAN_EMAIL_SUFFIX, '');
-      return ref.set({
-        phone,
-        points: 0,
-        bonusSpins: 0,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-  });
-}
-
-function initFanAuthListener(){
-  if(!firebaseReady || !fanAuth) return;
-  fanAuth.onAuthStateChanged(user => {
-    currentFanUid = user ? user.uid : null;
-    document.getElementById('fanAuthGate').style.display = user ? 'none' : 'block';
-    document.getElementById('fanPointsContent').style.display = user ? 'block' : 'none';
-    document.getElementById('fanPasswordInput').value = '';
-    if(user){
-      ensureFanDoc(user.uid, user.email).catch(err=> console.error('Erreur ensureFanDoc :', err));
-      listenFanData(user.uid);
-    } else {
-      stopFanDataListener();
-      renderPoints();
-    }
-  });
-}
-
-/* ============================================================
-   POINTS — stockés dans Firebase (fanUsers/{uid}), plus sur
-   l'appareil. Un cache local garde l'affichage instantané, mais
-   toute écriture passe par Firestore (via increment, jamais une
-   valeur absolue envoyée par le client).
-   ============================================================ */
-const THRESHOLD = 250;
-
-let fanPointsCache = 0;
-let fanBonusCache = 0;
-let fanLastDailyCache = null;
-let fanLastShareCache = null;
-let fanYoutubeVerifiedCache = false;
-let fanMilestoneSeenCache = 0;
-let currentFanPhone = null;
-let fanDataUnsub = null;
-
-function listenFanData(uid){
-  if(fanDataUnsub){ fanDataUnsub(); fanDataUnsub = null; }
-  fanDataUnsub = db.collection('fanUsers').doc(uid).onSnapshot(doc=>{
-    const data = doc.data() || {};
-    fanPointsCache = data.points || 0;
-    fanBonusCache = data.bonusSpins || 0;
-    fanLastDailyCache = data.lastDailyClaim || null;
-    fanLastShareCache = data.lastShareClaim || null;
-    fanYoutubeVerifiedCache = !!data.youtubeVerified;
-    fanMilestoneSeenCache = data.milestoneSeen || 0;
-    currentFanPhone = data.phone || null;
-    renderPoints();
-    checkDaily();
-    checkMilestones();
-  });
-}
-function stopFanDataListener(){
-  if(fanDataUnsub){ fanDataUnsub(); fanDataUnsub = null; }
-  fanPointsCache = 0; fanBonusCache = 0;
-  fanLastDailyCache = null; fanLastShareCache = null;
-  fanYoutubeVerifiedCache = false; fanMilestoneSeenCache = 0;
-}
-
-function getPoints(){ return fanPointsCache; }
-function getBonusSpins(){ return fanBonusCache; }
-
-function addPoints(n, label){
-  if(!currentFanUid){ showToast('Connecte-toi pour gagner des points'); return; }
-  db.collection('fanUsers').doc(currentFanUid).update({
-    points: firebase.firestore.FieldValue.increment(n)
-  }).then(()=>{
-    showToast(`+${n} points — ${label}`);
-  }).catch(()=> showToast('Erreur, réessaie'));
-}
-function spendPoints(n){
-  if(!currentFanUid) return Promise.reject();
-  return db.collection('fanUsers').doc(currentFanUid).update({
-    points: firebase.firestore.FieldValue.increment(-n)
-  });
-}
-function addBonusSpin(){
-  if(!currentFanUid) return Promise.reject();
-  return db.collection('fanUsers').doc(currentFanUid).update({
-    bonusSpins: firebase.firestore.FieldValue.increment(1)
-  });
-}
-function useBonusSpin(){
-  if(!currentFanUid) return Promise.reject();
-  return db.collection('fanUsers').doc(currentFanUid).update({
-    bonusSpins: firebase.firestore.FieldValue.increment(-1)
-  });
-}
-
-function renderPoints(){
-  const p = getPoints();
-  const bonus = getBonusSpins();
-  document.getElementById('pointsValue').textContent = p;
-  const pct = Math.min(100, (p/THRESHOLD)*100);
-  document.getElementById('progressFill').style.width = pct+'%';
-  const remaining = Math.max(0, THRESHOLD-p);
-  if(bonus > 0){
-    document.getElementById('progressNote').textContent = `${bonus} tour(s) bonus disponible(s) via code promo`;
-  } else {
-    document.getElementById('progressNote').textContent = remaining===0
-      ? "Tu peux lancer la roue !"
-      : `Encore ${remaining} points avant la roue`;
-  }
-  document.getElementById('spinBtn').classList.toggle('spin-locked', p < THRESHOLD && bonus===0);
-}
-
-/* ---------- Partage natif, plafonné à 1 crédit/jour ---------- */
-async function earnShare(){
-  if(!currentFanUid){ showToast('Connecte-toi pour gagner des points'); return; }
-  if(!navigator.share){
-    showToast("Le partage natif n'est pas dispo sur ce navigateur");
-    return;
-  }
-  try{
-    await navigator.share({
-      title: 'BENRU 10',
-      text: "Découvre l'application officielle de BENRU 10 !",
-      url: window.location.href
-    });
-    const today = new Date().toDateString();
-    if(fanLastShareCache === today){
-      showToast("Merci pour le partage ! (déjà crédité aujourd'hui)");
-      return;
-    }
-    db.collection('fanUsers').doc(currentFanUid).update({
-      points: firebase.firestore.FieldValue.increment(2),
-      lastShareClaim: today
-    }).then(()=>{
-      showToast("+2 points — partage de l'application");
-    }).catch(()=> showToast('Erreur, réessaie'));
-  }catch(e){
-    // partage annulé par l'utilisateur — on ne crédite rien
-  }
-}
-
-/* ---------- Abonnement YouTube vérifié (Google Sign-In + API officielle) ----------
-   ⚠️ Nécessite une configuration Google Cloud (Client ID OAuth + clé API
-   YouTube Data v3), à faire une seule fois — voir YOUTUBE-SETUP.md.
-   Tant que ce n'est pas configuré, le bouton l'indique clairement. */
-const YOUTUBE_CLIENT_ID = "";      // Client ID OAuth Google Cloud
-const YOUTUBE_API_KEY = "";        // Clé API YouTube Data v3
-const YOUTUBE_CHANNEL_ID = "";     // ID de la chaîne YouTube de l'artiste
-
-function verifyYoutubeSub(){
-  if(!currentFanUid){ showToast('Connecte-toi pour gagner des points'); return; }
-  if(fanYoutubeVerifiedCache){
-    showToast('Abonnement YouTube déjà vérifié');
-    return;
-  }
-  if(!YOUTUBE_CLIENT_ID || !YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID){
-    showToast('Vérification YouTube à configurer — voir YOUTUBE-SETUP.md');
-    return;
-  }
-  if(typeof google === 'undefined' || !google.accounts){
-    showToast('Connexion Google indisponible pour le moment');
-    return;
-  }
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: YOUTUBE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/youtube.readonly',
-    callback: (response) => {
-      if(!response.access_token){
-        showToast('Connexion Google annulée');
+      const el = document.getElementById('postList');
+      if(posts.length===0){
+        el.innerHTML = `<div class="empty">Aucune publication pour l'instant</div>`;
         return;
       }
-      fetch(`https://www.googleapis.com/youtube/v3/subscriptions?part=id&forChannelId=${YOUTUBE_CHANNEL_ID}&mine=true&key=${YOUTUBE_API_KEY}`, {
-        headers: { Authorization: `Bearer ${response.access_token}` }
-      })
-      .then(r => r.json())
-      .then(data => {
-        if(data.items && data.items.length > 0){
-          db.collection('fanUsers').doc(currentFanUid).update({
-            points: firebase.firestore.FieldValue.increment(2),
-            youtubeVerified: true
-          }).then(()=>{
-            showToast('Abonnement confirmé, merci !');
-          }).catch(()=> showToast('Erreur, réessaie'));
-        } else {
-          showToast("Pas encore abonné à la chaîne — abonne-toi puis réessaie");
-        }
-      })
-      .catch(()=> showToast('Vérification impossible, réessaie plus tard'));
-    }
-  });
-  client.requestAccessToken();
-}
-
-/* ---------- Paliers collectifs TikTok / Facebook (anti-fraude) ----------
-   Toi (dans admin.html) mets à jour le nombre d'abonnés et les paliers
-   dans Firebase. Dès qu'un fan ouvre l'app après qu'un nouveau palier
-   est atteint, il reçoit automatiquement le bonus — une seule fois. */
-function checkMilestones(){
-  if(!firebaseReady || !currentFanUid) return;
-  db.collection('config').doc('milestones').get().then(doc=>{
-    if(!doc.exists) return;
-    const data = doc.data();
-    const reached = data.reached || 0; // dernier palier atteint (défini par toi)
-    const bonus = data.bonus || 0;     // points donnés par palier
-    const seen = fanMilestoneSeenCache || 0;
-    if(reached > seen && bonus > 0){
-      db.collection('fanUsers').doc(currentFanUid).update({
-        points: firebase.firestore.FieldValue.increment(bonus),
-        milestoneSeen: reached
-      }).then(()=>{
-        showToast(`+${bonus} points — palier collectif atteint`);
-        const banner = document.getElementById('milestoneBanner');
-        banner.className = 'milestone-banner';
-        banner.style.display = 'flex';
-        banner.textContent = `🎉 Palier atteint${data.label ? ' — '+data.label : ''} ! +${bonus} points offerts à tous les fans actifs.`;
-      }).catch(()=>{});
-    }
-  }).catch(()=>{});
-}
-
-function earnDaily(){
-  if(!currentFanUid){ showToast('Connecte-toi pour gagner des points'); return; }
-  const today = new Date().toDateString();
-  if(fanLastDailyCache === today){
-    showToast("Déjà récupéré aujourd'hui, reviens demain");
-    return;
-  }
-  db.collection('fanUsers').doc(currentFanUid).update({
-    points: firebase.firestore.FieldValue.increment(1),
-    lastDailyClaim: today
-  }).then(()=>{
-    showToast('+1 points — connexion du jour');
-    document.getElementById('btnDaily').disabled = true;
-  }).catch(err=> {
-    showToast('Erreur : ' + err.code);
-    console.error('Erreur earnDaily :', err);
-  });
-}
-function checkDaily(){
-  const today = new Date().toDateString();
-  document.getElementById('btnDaily').disabled = (fanLastDailyCache === today);
-}
-
-/* ============================================================
-   ROUE DES CADEAUX — probabilités pondérées définies par l'artiste
-   ============================================================ */
-const lots = [
-  {name:"300 F",           short:"300F",    prob:10.000, color:'var(--seg-1)'},
-  {name:"Pas de chance",   short:"PERDU",   prob:80.000, color:'#4a4560'},
-  {name:"Habit MALA",      short:"MALA",    prob:5.000,  color:'var(--seg-2)'},
-  {name:"Place VIP concert",short:"VIP",    prob:3.000,  color:'var(--seg-3)'},
-  {name:"5 000 F",         short:"5000F",   prob:1.000,  color:'var(--seg-5)'},
-  {name:"3 000 F",         short:"3000F",   prob:1.000,  color:'var(--seg-4)'},
-  {name:"10 000 F",        short:"10000F",  prob:0.000,  color:'var(--seg-6)'},
-  {name:"100 000 F",       short:"100000F", prob:0.000,  color:'var(--seg-7)'},
-];
-
-/* La roue est dessinée avec 7 portions VISUELLEMENT ÉGALES (le fan ne doit
-   pas deviner ses chances en regardant la taille des portions). Le tirage
-   au sort réel, lui, utilise les vraies probabilités définies dans "lots"
-   (pickLot ci-dessous) — totalement indépendant du dessin. */
-let visualLots = [];
-
-function computeVisualLots(){
-  const step = 360/lots.length;
-  visualLots = lots.map((l,i)=>{
-    const start = i*step;
-    const end = start+step;
-    return {...l, visStart:start, visEnd:end, visMid:(start+end)/2};
-  });
-}
-
-function polarToXY(cx, cy, radius, angleDeg){
-  const rad = angleDeg * Math.PI/180;
-  return [cx + radius*Math.sin(rad), cy - radius*Math.cos(rad)];
-}
-
-function buildWheelVisual(){
-  computeVisualLots();
-  const cx=100, cy=100, r=94;
-  let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="var(--bg-card)"/>`;
-
-  visualLots.forEach(l=>{
-    const [x1,y1] = polarToXY(cx,cy,r,l.visStart);
-    const [x2,y2] = polarToXY(cx,cy,r,l.visEnd);
-    const largeArc = (l.visEnd-l.visStart) > 180 ? 1 : 0;
-    svg += `<path d="M ${cx},${cy} L ${x1.toFixed(2)},${y1.toFixed(2)} A ${r},${r} 0 ${largeArc} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${l.color}" stroke="rgba(255,255,255,.45)" stroke-width="1.3"/>`;
-  });
-
-  visualLots.forEach(l=>{
-    const angle = l.visMid;
-    const flip = angle>90 && angle<270;
-    const labelR = 62;
-    const rot = flip ? angle+180 : angle;
-    const ty = flip ? cy+labelR : cy-labelR;
-    const fontSize = l.short.length<=4 ? 15 : (l.short.length<=6 ? 13 : 11);
-    svg += `<text x="${cx}" y="${ty}" transform="rotate(${rot} ${cx} ${cy})" text-anchor="middle" dominant-baseline="middle"
-      font-family="'Bebas Neue',sans-serif" font-size="${fontSize}" letter-spacing="0.02em"
-      fill="#fff" stroke="rgba(0,0,0,.5)" stroke-width="2.5" paint-order="stroke" style="stroke-linejoin:round;">${l.short}</text>`;
-  });
-
-  document.getElementById('wheel').innerHTML = svg;
-}
-
-function pickLot(){
-  const r = Math.random()*100;
-  let acc = 0;
-  for(const l of lots){
-    acc += l.prob;
-    if(r <= acc) return l;
-  }
-  return lots[0];
-}
-
-let spinning = false;
-let audioCtx = null;
-function tick(){
-  try{
-    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.frequency.value = 900;
-    o.type = 'square';
-    g.gain.value = 0.05;
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start();
-    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.06);
-    o.stop(audioCtx.currentTime + 0.07);
-  }catch(e){ /* audio non disponible, on ignore */ }
-}
-
-function scheduleTicks(totalDuration){
-  // des tics rapprochés au début, de plus en plus espacés — comme une vraie roue qui ralentit
-  let elapsed = 0;
-  let interval = 60;
-  function loop(){
-    if(elapsed >= totalDuration) return;
-    tick();
-    interval = interval * 1.09;
-    elapsed += interval;
-    setTimeout(loop, interval);
-  }
-  loop();
-}
-
-function spin(){
-  if(spinning) return;
-  const hasBonus = getBonusSpins() > 0;
-  if(getPoints() < THRESHOLD && !hasBonus){
-    showToast(`Il faut ${THRESHOLD} points, ou un code promo payé, pour jouer`);
-    return;
-  }
-  spinning = true;
-  const usingBonus = getPoints() < THRESHOLD && hasBonus;
-  const shell = document.querySelector('.wheel-shell');
-  shell.classList.add('spinning');
-  document.getElementById('spinBtn').disabled = true;
-
-  const lot = pickLot();
-  const visual = visualLots.find(v => v.name === lot.name) || visualLots[0];
-
-  const startAngle = visual.visStart;
-  const segAngle = visual.visEnd - visual.visStart;
-  // atterrissage aléatoire dans le lot (pas toujours pile au centre), plus naturel
-  const margin = Math.min(segAngle*0.3, 4);
-  const offset = (Math.random()*2-1) * Math.max(0, segAngle/2 - margin);
-  const landingAngle = startAngle + segAngle/2 + offset;
-
-  const wheel = document.getElementById('wheel');
-  wheel.style.transition = 'none';
-  wheel.style.transform = 'rotate(0deg)';
-  void wheel.offsetWidth;
-
-  const SPIN_DURATION = 5000; // 5 secondes, comme demandé
-  const extraSpins = 7*360;
-  const finalRotation = extraSpins + (360 - landingAngle);
-  const overshoot = finalRotation + 6; // petit dépassement pour un rebond réaliste
-
-  scheduleTicks(SPIN_DURATION - 300);
-
-  requestAnimationFrame(()=>{
-    wheel.style.transition = `transform ${SPIN_DURATION/1000}s cubic-bezier(.11,.72,.14,1)`;
-    wheel.style.transform = `rotate(${overshoot}deg)`;
-  });
-
-  setTimeout(()=>{
-    // léger retour en arrière pour simuler le rebond de la roue qui se stabilise
-    wheel.style.transition = 'transform .35s ease-out';
-    wheel.style.transform = `rotate(${finalRotation}deg)`;
-  }, SPIN_DURATION);
-
-  setTimeout(()=>{
-    const spend = usingBonus ? useBonusSpin() : spendPoints(THRESHOLD);
-    spend.catch(()=> showToast('Erreur de mise à jour des points'));
-    openResult(lot);
-    spinning = false;
-    shell.classList.remove('spinning');
-  }, SPIN_DURATION + 450);
-}
-
-let currentWinLot = null;
-
-function openResult(lot){
-  document.getElementById('resultTitle').textContent = lot.name;
-  const emojiEl = document.querySelector('#resultModal .emoji');
-  const phoneBlock = document.getElementById('winnerPhoneBlock');
-  const phoneInput = document.getElementById('winnerPhoneInput');
-  const phoneConfirm = document.getElementById('winnerPhoneConfirm');
-  phoneInput.value = '';
-  phoneConfirm.style.display = 'none';
-  phoneInput.style.display = 'block';
-  document.querySelector('#winnerPhoneBlock .promo-btn').style.display = 'block';
-
-  let desc;
-  if(lot.name === 'Pas de chance'){
-    desc = "Pas de chance cette fois-ci. Retente ta chance en accumulant plus de points !";
-    if(emojiEl) emojiEl.textContent = '😅';
-    phoneBlock.style.display = 'none';
-    currentWinLot = null;
-  } else {
-    if(emojiEl) emojiEl.textContent = '🎉';
-    desc = "Laisse ton numéro ci-dessous pour que l'équipe te contacte pour la remise.";
-    phoneBlock.style.display = 'block';
-    currentWinLot = lot.name;
-  }
-  document.getElementById('resultDesc').textContent = desc;
-  document.getElementById('resultModal').classList.add('show');
-}
-
-function submitWinnerPhone(){
-  const phone = document.getElementById('winnerPhoneInput').value.trim();
-  if(!phone){
-    showToast('Entre ton numéro');
-    return;
-  }
-  if(!firebaseReady || !currentWinLot || !currentFanUid){
-    showToast('Numéro non enregistré, réessaie plus tard');
-    return;
-  }
-  db.collection('winners').add({
-    prize: currentWinLot,
-    phone: phone,
-    contacted: false,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>{
-    document.getElementById('winnerPhoneConfirm').style.display = 'block';
-    document.getElementById('winnerPhoneInput').style.display = 'none';
-    document.querySelector('#winnerPhoneBlock .promo-btn').style.display = 'none';
-  }).catch(()=>{
-    showToast('Erreur, réessaie');
-  });
-}
-
-function closeModal(){
-  document.getElementById('resultModal').classList.remove('show');
-}
-
-/* ============================================================
-   CODE PROMO — débloquer un tour de roue en payant 500f
-   Le code est écrit dans Firebase avec le statut "pending".
-   Toi (dans admin.html) tu le marques "verified" une fois le
-   paiement reçu. Le fan revient ensuite le valider ici.
-   ============================================================ */
-
-function generateCodeString(){
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sans caractères ambigus (0/O, 1/I...)
-  let code = 'ART-';
-  for(let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
-  return code;
-}
-
-function generatePromoCode(){
-  if(!firebaseReady){
-    showToast('Fonctionnalité momentanément indisponible');
-    return;
-  }
-  if(!currentFanUid){
-    showToast('Connecte-toi pour générer un code');
-    return;
-  }
-  const code = generateCodeString();
-  db.collection('promoCodes').doc(code).set({
-    code, status:'pending', used:false,
-    amount: 500,
-    uid: currentFanUid,
-    phone: currentFanPhone,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(()=>{
-    document.getElementById('promoGenerateView').style.display = 'none';
-    document.getElementById('promoCodeView').style.display = 'block';
-    document.getElementById('promoCodeDisplay').textContent = code;
-    document.getElementById('promoInstructions').textContent =
-      `Ton code : ${code}. Le composeur va s'ouvrir dans un instant pour le paiement — une fois confirmé par l'équipe, reviens ici valider ce code.`;
-    setTimeout(()=>{
-      window.location.href = `tel:*144*2*1*${ARTIST_MOBILE_MONEY_RAW}*500%23`;
-    }, 2500);
-  }).catch(err=>{
-    showToast('Erreur : ' + err.code);
-    console.error('Erreur generatePromoCode :', err);
-  });
-}
-
-function resetPromoView(){
-  document.getElementById('promoGenerateView').style.display = 'block';
-  document.getElementById('promoCodeView').style.display = 'none';
-}
-
-function redeemPromoCode(){
-  if(!firebaseReady){
-    showToast('Fonctionnalité momentanément indisponible');
-    return;
-  }
-  if(!currentFanUid){
-    showToast('Connecte-toi pour débloquer ton tour');
-    return;
-  }
-  const input = document.getElementById('promoRedeemInput');
-  const code = input.value.trim().toUpperCase();
-  if(!code){
-    showToast('Entre ton code');
-    return;
-  }
-  db.collection('promoCodes').doc(code).get().then(doc=>{
-    if(!doc.exists){
-      showToast("Code introuvable");
-      return;
-    }
-    const data = doc.data();
-    if(data.uid && data.uid !== currentFanUid){
-      showToast("Ce code appartient à un autre compte");
-      return;
-    }
-    if(data.used){
-      showToast('Ce code a déjà été utilisé');
-      return;
-    }
-    if(data.status !== 'verified'){
-      showToast("Paiement pas encore confirmé par l'équipe, réessaie plus tard");
-      return;
-    }
-    doc.ref.update({used:true, usedAt: firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{
-      return addBonusSpin();
-    }).then(()=>{
-      input.value = '';
-      showToast('Tour débloqué ! Tu peux lancer la roue');
-    }).catch(err=>{
-      showToast('Erreur : ' + err.code);
-      console.error('Erreur redeemPromoCode (update) :', err);
+      el.innerHTML = posts.map(p=>`
+        <div class="post-row">
+          <div class="p-info">
+            <h4>${NEWS_ICONS[p.type]||'📌'} ${p.title}</h4>
+            <span>${NEWS_LABELS[p.type]||''}${p.date ? ' · '+formatPostDate(p.date) : ''}</span>
+          </div>
+          <button class="post-del" onclick="deletePost('${p.id}')">🗑</button>
+        </div>
+      `).join('');
     });
-  }).catch(err=>{
-    showToast('Erreur : ' + (err.code || err.message));
-    console.error('Erreur redeemPromoCode (get) :', err);
-  });
 }
 
-/* ============================================================
-   À PROPOS / CONDITIONS D'UTILISATION
-   ⚠️ Texte de base à relire et adapter — ce n'est pas un texte
-   juridique validé, juste un point de départ raisonnable.
-   ============================================================ */
-const LEGAL_CONTENT = {
-  about: {
-    title: "À propos",
-    body: `
-      <p><strong>BENRU 10</strong> — application officielle de l'artiste.</p>
-      <p>Retrouve ici les dernières sorties, les concerts à venir, les actualités publiées directement par l'équipe, et participe à la roue des cadeaux en accumulant des points.</p>
-      <p>Une réalisation <strong>FST PRODUCTION</strong>.</p>
-      <p>Contact : rubenzida10@gmail.com</p>
-    `
-  },
-  terms: {
-    title: "Conditions d'utilisation",
-    body: `
-      <p><strong>1. Objet</strong><br>
-      Les présentes conditions régissent l'utilisation de l'application <strong>BENRU 10</strong>, éditée par FST PRODUCTION pour le compte de l'artiste. En utilisant l'application, tu acceptes ces conditions.</p>
-
-      <p><strong>2. Accès à l'application</strong><br>
-      L'application est proposée gratuitement. Certaines fonctionnalités (roue des cadeaux, soutien à l'artiste) impliquent des paiements volontaires via Mobile Money, en dehors de tout système de carte bancaire.</p>
-
-      <p><strong>3. Compte et données</strong><br>
-      L'application ne demande pas de création de compte pour les fans. Aucune donnée personnelle n'est vendue ni partagée avec des tiers à des fins commerciales.</p>
-
-      <p><strong>4. Système de points</strong><br>
-      Les points sont attribués selon le barème affiché dans l'app (partage, connexion, actions vérifiées). L'équipe se réserve le droit d'ajuster ce barème et de retirer des points obtenus de façon frauduleuse.</p>
-
-      <p><strong>5. Roue des cadeaux</strong><br>
-      Un tirage s'effectue selon des probabilités définies par l'équipe, non modifiables par l'utilisateur. Les lots gagnés (dépôts Mobile Money, produits, places de concert) sont distribués par l'équipe après vérification, dans un délai raisonnable. Un lot ne peut pas être échangé contre un autre.</p>
-
-      <p><strong>6. Codes promo</strong><br>
-      Un code généré contre paiement (500f) n'est validé qu'après confirmation manuelle du paiement par l'équipe. Un code déjà utilisé ne peut pas resservir. Aucun remboursement n'est possible une fois le tour joué.</p>
-
-      <p><strong>7. Soutien à l'artiste</strong><br>
-      Les dons effectués via la fonctionnalité "Soutenir l'artiste" sont volontaires et non remboursables.</p>
-
-      <p><strong>8. Comportement des utilisateurs</strong><br>
-      Toute tentative de fraude (multi-comptes, manipulation du système de points, contenu injurieux dans les commentaires) peut entraîner un blocage de l'accès à certaines fonctionnalités.</p>
-
-      <p><strong>9. Publication de contenu</strong><br>
-      Les actualités, alertes et informations publiées dans l'application le sont uniquement par l'équipe autorisée de l'artiste.</p>
-
-      <p><strong>10. Responsabilité</strong><br>
-      L'application est fournie "en l'état". FST PRODUCTION et l'artiste ne peuvent être tenus responsables d'une interruption de service liée à des services tiers indépendants de leur volonté (réseau, opérateur Mobile Money, plateformes de streaming).</p>
-
-      <p><strong>11. Modification des conditions</strong><br>
-      Ces conditions peuvent être mises à jour à tout moment ; la version en vigueur est toujours celle affichée dans l'application.</p>
-
-      <p><strong>12. Contact</strong><br>
-      Pour toute question : rubenzida10@gmail.com</p>
-    `
-  }
-};
-
-function openInfoMenu(){
-  document.getElementById('infoMenuModal').classList.add('show');
-}
-function closeInfoMenu(){
-  document.getElementById('infoMenuModal').classList.remove('show');
+/* ---------- Codes promo (tours de roue payés 500f) ---------- */
+function formatWhen(ts){
+  if(!ts || !ts.toDate) return '';
+  const d = ts.toDate();
+  return d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
 }
 
-let tutorialVideoUrl = null;
-function openTutorial(){
-  const body = document.getElementById('tutorialBody');
-  if(tutorialVideoUrl){
-    body.innerHTML = `<video controls src="${tutorialVideoUrl}" style="width:100%; border-radius:10px; display:block;" onerror="handleMediaError(this)"></video>`;
-  } else {
-    body.innerHTML = `<p>Le tutoriel vidéo n'est pas encore disponible.</p>`;
-  }
-  document.getElementById('tutorialModal').classList.add('show');
+function markPromoPaid(code){
+  db.collection('promoCodes').doc(code).update({status:'verified'})
+    .then(()=> showToast('Code marqué comme payé'))
+    .catch(()=> showToast('Erreur, réessaie'));
 }
-function closeTutorial(){
-  document.getElementById('tutorialModal').classList.remove('show');
-}
-function listenTutorial(){
-  if(!firebaseReady) return;
+
+/* ---------- Fonctionnement de l'application (vidéo tuto) ---------- */
+document.getElementById('tutorialFile').addEventListener('change', function(){
+  document.getElementById('tutorialFileName').textContent = this.files[0] ? this.files[0].name : '';
+});
+
+function listenTutorialAdmin(){
   db.collection('settings').doc('tutorial').onSnapshot(doc=>{
-    tutorialVideoUrl = doc.exists ? doc.data().videoUrl : null;
+    const el = document.getElementById('tutorialCurrentInfo');
+    if(doc.exists && doc.data().videoUrl){
+      el.textContent = 'Une vidéo est déjà en ligne. En publier une nouvelle la remplacera.';
+    } else {
+      el.textContent = 'Aucune vidéo publiée pour le moment.';
+    }
   });
 }
 
-function openLegal(key){
-  const content = LEGAL_CONTENT[key];
-  document.getElementById('legalTitle').textContent = content.title;
-  document.getElementById('legalBody').innerHTML = content.body;
-  document.getElementById('legalModal').classList.add('show');
-}
-function closeLegal(){
-  document.getElementById('legalModal').classList.remove('show');
-}
-
-/* ============================================================
-   SOUTENIR L'ARTISTE
-   ============================================================ */
-let selectedAmount = null;
-function selectAmount(btn, amount){
-  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('customAmountInput').value = '';
-  selectedAmount = amount;
-}
-function selectCustomAmount(value){
-  const n = parseInt(value, 10);
-  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('selected'));
-  selectedAmount = (n && n > 0) ? n : null;
-}
-/* Numéro Mobile Money qui reçoit les paiements (soutien + codes promo) */
-const ARTIST_MOBILE_MONEY = "54 49 51 04";
-const ARTIST_MOBILE_MONEY_RAW = "54495104";
-
-/* Si tu obtiens un vrai lien de paiement en ligne (Wave, lien marchand...),
-   colle-le ici : le bouton redirigera directement dessus au lieu d'ouvrir
-   le menu Orange Money. */
-/* Si tu obtiens un vrai lien de paiement en ligne (Wave, lien marchand...),
-   colle-le ici SANS le montant à la fin — l'app l'ajoute automatiquement
-   (ex: "https://pay.wave.com/m/ton-id" → devient "...?amount=500").
-   Tant qu'il est vide, l'app utilise le composeur Orange Money (USSD). */
-const SUPPORT_PAYMENT_LINK = "";
-
-function sendSupport(){
-  if(!selectedAmount){
-    showToast('Choisis un montant');
+function publishTutorial(){
+  const file = document.getElementById('tutorialFile').files[0];
+  if(!file){
+    showToast('Choisis une vidéo');
     return;
   }
-  if(SUPPORT_PAYMENT_LINK){
-    const separator = SUPPORT_PAYMENT_LINK.includes('?') ? '&' : '?';
-    window.location.href = `${SUPPORT_PAYMENT_LINK}${separator}amount=${selectedAmount}`;
+  if(!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET){
+    showToast('Hébergement de fichiers à configurer — voir CLOUDINARY-SETUP.md');
     return;
   }
-  window.location.href = `tel:*144*2*1*${ARTIST_MOBILE_MONEY_RAW}*${selectedAmount}%23`;
+  const btn = document.getElementById('tutorialBtn');
+  btn.disabled = true; btn.textContent = 'Envoi en cours…';
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+  fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`, {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if(!data.secure_url) throw new Error('upload failed');
+      return db.collection('settings').doc('tutorial').set({
+        videoUrl: data.secure_url,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
+    .then(()=>{
+      btn.disabled = false; btn.textContent = 'Publier la vidéo';
+      document.getElementById('tutorialFile').value = '';
+      document.getElementById('tutorialFileName').textContent = '';
+      showToast('Vidéo publiée');
+    })
+    .catch(()=>{
+      btn.disabled = false; btn.textContent = 'Publier la vidéo';
+      showToast("Échec de l'envoi de la vidéo");
+    });
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
-renderHome();
-renderNews();
-renderSocial();
-listenTutorial();
-initFanAuthListener();
-renderReleases();
-renderConcerts();
-buildWheelVisual();
-renderPoints();
+/* ---------- Gagnants de la roue ---------- */
+function markWinnerContacted(id, current){
+  db.collection('winners').doc(id).update({contacted: !current})
+    .catch(()=> showToast('Erreur, réessaie'));
+}
+function deleteWinner(id){
+  db.collection('winners').doc(id).delete()
+    .then(()=> showToast('Gagnant supprimé'))
+    .catch(()=> showToast('Erreur, réessaie'));
+}
+function listenWinners(){
+  db.collection('winners').orderBy('createdAt','desc').limit(50)
+    .onSnapshot(snapshot=>{
+      const el = document.getElementById('winnersList');
+      const winners = snapshot.docs.map(d=>({id:d.id, ...d.data()}));
+      if(winners.length===0){
+        el.innerHTML = `<div class="empty">Aucun gagnant pour l'instant</div>`;
+        return;
+      }
+      el.innerHTML = winners.map(w=>`
+        <div class="post-row">
+          <div class="p-info">
+            <h4>${w.prize} · ${w.phone}</h4>
+            <span>${w.contacted ? '✅ Contacté' : '🟠 À contacter'} · ${formatWhen(w.createdAt)}</span>
+          </div>
+          <button class="post-del" style="width:auto; padding:0 10px; color:var(--accent); font-size:11px;" onclick="markWinnerContacted('${w.id}', ${!!w.contacted})">${w.contacted ? 'Annuler' : 'Marquer contacté'}</button>
+          <button class="post-del" onclick="deleteWinner('${w.id}')">🗑</button>
+        </div>
+      `).join('');
+    });
+}
 
-/* ---------- Écran d'ouverture : 5 secondes puis affichage de l'app ---------- */
-setTimeout(()=>{
-  document.getElementById('splash').classList.add('hide');
-  document.getElementById('appRoot').classList.remove('app-hidden');
-}, 5000);
+function deletePromoCode(code){
+  db.collection('promoCodes').doc(code).delete()
+    .then(()=> showToast('Code supprimé'))
+    .catch(()=> showToast('Erreur, réessaie'));
+}
+
+function listenPromoCodes(){
+  db.collection('promoCodes').orderBy('createdAt','desc').limit(30)
+    .onSnapshot(snapshot=>{
+      const codes = snapshot.docs.map(d=>d.data());
+      const el = document.getElementById('promoList');
+      if(codes.length===0){
+        el.innerHTML = `<div class="empty">Aucun code généré pour l'instant</div>`;
+        return;
+      }
+      el.innerHTML = codes.map(c=>{
+        const statusLabel = c.used ? '✅ Utilisé' : (c.status==='verified' ? '🟢 Payé, tour pas encore utilisé' : '🟠 En attente de paiement');
+        const payBtn = (!c.used && c.status!=='verified')
+          ? `<button class="post-del" style="width:auto; padding:0 12px; color:var(--accent);" onclick="markPromoPaid('${c.code}')">Marquer payé</button>`
+          : '';
+        return `
+        <div class="post-row">
+          <div class="p-info">
+            <h4>${c.code} · ${c.amount||500}f${c.phone ? ' · '+c.phone : ''}</h4>
+            <span>${statusLabel} · ${formatWhen(c.createdAt)}</span>
+          </div>
+          ${payBtn}
+          <button class="post-del" onclick="deletePromoCode('${c.code}')">🗑</button>
+        </div>`;
+      }).join('');
+    });
+}
 </script>
 </body>
 </html>
