@@ -1,7 +1,7 @@
 {
-  "name": "BENRU 10 Admin",
-  "short_name": "BENRU Admin",
-  "description": "Espace de gestion réservé à l'équipe de BENRU 10.",
+  "name": "BENRU 10",
+  "short_name": "BENRU 10",
+  "description": "Application officielle de l'artiste BENRU 10 — sorties, concerts, actualités.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,7 +9,7 @@
   "theme_color": "#e8a33d",
   "orientation": "portrait",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
